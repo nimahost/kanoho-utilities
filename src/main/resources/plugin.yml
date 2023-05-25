@@ -1,0 +1,4 @@
+name: kanoho-utilities
+version: '${version}'
+main: net.nimajnebec.kanoho.Kanoho
+api-version: 1.19
