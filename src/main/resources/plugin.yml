@@ -1,4 +1,13 @@
 name: kanoho-utilities
-version: '${version}'
+version: '${plugin_version}'
 main: net.nimajnebec.kanoho.Kanoho
-api-version: 1.19
+api-version: '${minecraft_version}'
+permissions:
+  kanoho.animate:
+    description: "Ability to use the /animate command"
+    default: op
+commands:
+  animate:
+    description: "Tween the specified volume to the specified destination."
+    usage: "/animate <begin> <end> <destination>"
+    permission: kanoho.animate
