@@ -1,40 +1,35 @@
 package net.nimajnebec.kanoho;
 
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
-import io.papermc.paper.adventure.PaperAdventure;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R3.command.VanillaCommandWrapper;
+import net.nimajnebec.kanoho.command.AnimateCommand;
+import net.nimajnebec.kanoho.command.util.AdvancedCommandRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
-import java.util.List;
-
 public final class Kanoho extends JavaPlugin {
-
+    private static Kanoho instance;
+    private final AdvancedCommandRegistry commands = new AdvancedCommandRegistry(this);
     private final Logger logger = this.getSLF4JLogger();
-//    private final CommandRegistry commands = new CommandRegistry(this.getServer());
+
+    public Kanoho() {
+        Kanoho.instance = this;
+    }
 
     @Override
     public void onEnable() {
-        logger.info("{} {} Loaded!", this.getName(), this.getPluginMeta().getVersion());
-    }
+        this.getServer().getPluginManager().registerEvents(commands, this);
 
-    private int test(CommandContext<CommandSourceStack> ctx) {
-        var mm = MiniMessage.miniMessage();
-        Component parsed = mm.deserialize("<rainbow>RAINBOW!!!</rainbow>");
-        ctx.getSource().sendSuccess(PaperAdventure.asVanilla(parsed), true);
-        return 2;
+        commands.setup();
+        commands.register("animate", new AnimateCommand(), true);
+
+        logger.info("{} {} Loaded!", this.getName(), this.getPluginMeta().getVersion());
     }
 
     @Override
     public void onDisable() {
-//        commands.cleanUp();
+        commands.cleanup();
+    }
+
+    public static Kanoho getInstance() {
+        return instance;
     }
 }

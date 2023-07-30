@@ -1,4 +1,4 @@
-name: kanoho-utilities
+name: kanoho
 version: '${plugin_version}'
 main: net.nimajnebec.kanoho.Kanoho
 api-version: '${minecraft_version}'
@@ -9,5 +9,5 @@ permissions:
 commands:
   animate:
     description: "Tween the specified volume to the specified destination."
-    usage: "/animate <begin> <end> <destination>"
+    usage: "/animate <begin> <end> <destination> <duration>"
     permission: kanoho.animate
