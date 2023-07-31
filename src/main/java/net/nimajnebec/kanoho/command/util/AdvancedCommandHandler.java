@@ -6,20 +6,14 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.nimajnebec.kanoho.Kanoho;
-import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 
-final class AdvancedCommandHandler {
+
+class AdvancedCommandHandler {
     private final AdvancedCommandDefinition definition;
     private final PluginCommand configuration;
     private boolean executeInjected = false;
     private boolean allowInExecute;
-
-    private static CommandNode<CommandSourceStack> getRootNode() {
-        CraftServer craftServer = (CraftServer) Bukkit.getServer();
-        return craftServer.getServer().vanillaCommandDispatcher.getDispatcher().getRoot();
-    }
 
     public AdvancedCommandHandler(AdvancedCommandDefinition definition, PluginCommand configuration, boolean allowInExecute) {
         this.allowInExecute = allowInExecute;
@@ -30,16 +24,16 @@ final class AdvancedCommandHandler {
     public void injectExecuteNode() {
         // Inject node if allowed and not already injected
         if (this.allowInExecute && !this.executeInjected) {
-            CommandNode<CommandSourceStack> rootNode = getRootNode();
+            CommandNode<CommandSourceStack> root = AdvancedCommandRegistry.getVanillaDispatcher().getDispatcher().getRoot();
             String name = this.getName();
 
-            if (rootNode.getChild(name) != null) {
+            if (root.getChild(name) != null) {
                 Kanoho.getInstance().getSLF4JLogger().warn("Skipping injecting execute node for '{}' as a node by that name already exists.", name);
                 this.allowInExecute = false; // Disallow in execute to prevent further inject attempts.
                 return;
             }
 
-            rootNode.addChild(this.getCommandNode(name));
+            root.addChild(this.getCommandNode(name));
             this.executeInjected = true;
         }
     }
@@ -47,7 +41,8 @@ final class AdvancedCommandHandler {
     public void cleanup() {
         // Remove execute node if injected
         if (this.executeInjected) {
-            getRootNode().removeCommand(this.getName());
+            CommandNode<CommandSourceStack> root = AdvancedCommandRegistry.getVanillaDispatcher().getDispatcher().getRoot();
+            root.removeCommand(this.getName());
         }
     }
 
