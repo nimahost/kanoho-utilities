@@ -15,6 +15,7 @@ import net.nimajnebec.kanoho.command.util.AdvancedCommandDefinition;
 import java.util.Collection;
 
 public class VelocityCommand extends AdvancedCommandDefinition {
+    private static final int MAXIMUM_VELOCITY = 100;
 
     @Override
     public void define(LiteralArgumentBuilder<CommandSourceStack> root) {
@@ -36,6 +37,11 @@ public class VelocityCommand extends AdvancedCommandDefinition {
                 DoubleArgumentType.getDouble(ctx, "z")
             );
 
+            if (velocity.length() > MAXIMUM_VELOCITY) {
+                ctx.getSource().sendFailure(Component.literal("Could not set velocity: Length is too large"));
+                return 0;
+            }
+
             target.setDeltaMovement(velocity);
             if (target instanceof Player player) {
                 player.hurtMarked = true;
@@ -48,6 +54,6 @@ public class VelocityCommand extends AdvancedCommandDefinition {
         else ctx.getSource().sendSuccess(() -> Component.literal(String.format("Set velocity of %s targets",
                 targets.size())), true);
 
-        return 1;
+        return targets.size();
     }
 }
