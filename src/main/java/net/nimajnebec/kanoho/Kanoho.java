@@ -1,6 +1,6 @@
 package net.nimajnebec.kanoho;
 
-import net.nimajnebec.kanoho.command.AnimateCommand;
+import net.nimajnebec.kanoho.command.VelocityCommand;
 import net.nimajnebec.kanoho.command.util.AdvancedCommandRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public final class Kanoho extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(commands, this);
 
         commands.setup();
-        commands.register("animate", new AnimateCommand(), true);
+        commands.register("velocity", new VelocityCommand(), true);
 
         logger.info("{} {} Loaded!", this.getName(), this.getPluginMeta().getVersion());
     }

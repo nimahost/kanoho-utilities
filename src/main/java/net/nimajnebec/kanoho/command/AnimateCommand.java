@@ -16,9 +16,8 @@ import net.nimajnebec.kanoho.command.util.AdvancedCommandDefinition;
 
 public class AnimateCommand extends AdvancedCommandDefinition {
     private static final int MAX_ANIMATE_AMOUNT = 64;
-    private static final Dynamic2CommandExceptionType ERROR_TOO_LARGE = new Dynamic2CommandExceptionType((maxcount, count) -> {
-        return net.minecraft.network.chat.Component.translatable("commands.clone.toobig", maxcount, count);
-    });
+    private static final Dynamic2CommandExceptionType ERROR_TOO_LARGE = new Dynamic2CommandExceptionType(
+            (maxcount, count) -> net.minecraft.network.chat.Component.translatable("commands.clone.toobig", maxcount, count));
 
     @Override
     public void define(LiteralArgumentBuilder<CommandSourceStack> root) {

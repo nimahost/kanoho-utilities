@@ -6,8 +6,15 @@ permissions:
   kanoho.animate:
     description: "Ability to use the /animate command"
     default: op
+  kanoho.velocity:
+    description: "Ability to use the /velocity command"
+    default: op
 commands:
   animate:
     description: "Tween the specified volume to the specified destination."
     usage: "/animate <begin> <end> <destination> <duration>"
     permission: kanoho.animate
+  velocity:
+    description: "Easily modify the velocity of entities."
+    usage: "/velocity set <targets> <velocity>"
+    permission: kanoho.velocity
