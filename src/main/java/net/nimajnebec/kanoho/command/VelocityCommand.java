@@ -1,16 +1,18 @@
 package net.nimajnebec.kanoho.command;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.coordinates.Coordinates;
+import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.nimajnebec.kanoho.command.util.AdvancedCommandDefinition;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
@@ -21,31 +23,62 @@ public class VelocityCommand extends AdvancedCommandDefinition {
     public void define(LiteralArgumentBuilder<CommandSourceStack> root) {
         root.then(literal("set")
             .then(argument("targets", EntityArgument.entities())
-            .then(argument("x", DoubleArgumentType.doubleArg())
-            .then(argument("y", DoubleArgumentType.doubleArg())
-            .then(argument("z", DoubleArgumentType.doubleArg())
-            .executes(this::execute))))));
+            .then(argument("velocity", Vec3Argument.vec3())
+            .executes(this::execute))));
+    }
+
+    private Vec3 calculateVelocity(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack source = ctx.getSource();
+
+        Coordinates argument = Vec3Argument.getCoordinates(ctx, "velocity");
+        Vec3 end = argument.getPosition(source);
+        Vec3 start = source.getPosition();
+
+        double x, y, z;
+
+        // Cancel Out Relative Coordinates
+        if (argument.isXRelative()) x = -start.x;
+        else x = -0.5;
+
+        if (argument.isYRelative()) y = -start.y;
+        else y = 0;
+
+        if (argument.isZRelative()) z = -start.z;
+        else z = -0.5;
+
+        x += end.x;
+        y += end.y;
+        z += end.z;
+
+        // Apply multiplier to relative velocity
+        if (argument instanceof WorldCoordinates) {
+
+            Vec3 relative;
+            @Nullable Entity executor = source.getEntity();
+            if (executor == null) relative = new Vec3(0, 0, 0);
+            else relative = executor.getDeltaMovement();
+
+            if (argument.isXRelative()) x *= relative.x;
+            if (argument.isYRelative()) y *= relative.y;
+            if (argument.isZRelative()) z *= relative.z;
+        }
+
+        return new Vec3(x, y, z);
     }
 
     private int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
 
+        Vec3 velocity = calculateVelocity(ctx);
+
+        if (velocity.length() > MAXIMUM_VELOCITY) {
+            ctx.getSource().sendFailure(Component.literal("Could not set velocity: Length is too large"));
+            return 0;
+        }
+
         for (Entity target: targets) {
-            Vec3 velocity = new Vec3(
-                DoubleArgumentType.getDouble(ctx, "x"),
-                DoubleArgumentType.getDouble(ctx, "y"),
-                DoubleArgumentType.getDouble(ctx, "z")
-            );
-
-            if (velocity.length() > MAXIMUM_VELOCITY) {
-                ctx.getSource().sendFailure(Component.literal("Could not set velocity: Length is too large"));
-                return 0;
-            }
-
             target.setDeltaMovement(velocity);
-            if (target instanceof Player player) {
-                player.hurtMarked = true;
-            }
+            target.hurtMarked = true;
         }
 
         if (targets.size() == 1)
