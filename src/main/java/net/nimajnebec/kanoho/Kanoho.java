@@ -2,6 +2,8 @@ package net.nimajnebec.kanoho;
 
 import net.nimajnebec.kanoho.command.VelocityCommand;
 import net.nimajnebec.kanoho.command.util.AdvancedCommandRegistry;
+import net.nimajnebec.kanoho.events.UseHelper;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
@@ -16,8 +18,12 @@ public final class Kanoho extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.getServer().getPluginManager().registerEvents(commands, this);
+        PluginManager manager = this.getServer().getPluginManager();
 
+        // Register Events
+        manager.registerEvents(new UseHelper(this), this);
+
+        // Register Commands
         commands.setup();
         commands.register("velocity", new VelocityCommand(), true);
 
