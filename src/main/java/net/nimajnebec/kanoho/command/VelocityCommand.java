@@ -14,7 +14,9 @@ import net.minecraft.world.phys.Vec3;
 import net.nimajnebec.kanoho.command.util.AdvancedCommandDefinition;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class VelocityCommand extends AdvancedCommandDefinition {
     private static final int MAXIMUM_VELOCITY = 100;
@@ -22,9 +24,13 @@ public class VelocityCommand extends AdvancedCommandDefinition {
     @Override
     public void define(LiteralArgumentBuilder<CommandSourceStack> root) {
         root.then(literal("set")
-            .then(argument("targets", EntityArgument.entities())
-            .then(argument("velocity", Vec3Argument.vec3())
-            .executes(this::execute))));
+                .then(argument("targets", EntityArgument.entities())
+                .then(argument("velocity", Vec3Argument.vec3())
+                .executes(this::setVelocity))))
+            .then(literal("add")
+                .then(argument("targets", EntityArgument.entities())
+                .then(argument("velocity", Vec3Argument.vec3())
+                .executes(this::addVelocity))));
     }
 
     private Vec3 calculateVelocity(CommandContext<CommandSourceStack> ctx) {
@@ -66,13 +72,13 @@ public class VelocityCommand extends AdvancedCommandDefinition {
         return new Vec3(x, y, z);
     }
 
-    private int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private int setVelocity(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
 
         Vec3 velocity = calculateVelocity(ctx);
 
         if (velocity.length() > MAXIMUM_VELOCITY) {
-            ctx.getSource().sendFailure(Component.literal("Could not set velocity: Length is too large"));
+            ctx.getSource().sendFailure(Component.literal("Could not set velocity: Velocity is too large"));
             return 0;
         }
 
@@ -88,5 +94,35 @@ public class VelocityCommand extends AdvancedCommandDefinition {
                 targets.size())), true);
 
         return targets.size();
+    }
+
+    private int addVelocity(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
+
+        Vec3 velocity = calculateVelocity(ctx);
+
+        if (velocity.length() > MAXIMUM_VELOCITY) {
+            ctx.getSource().sendFailure(Component.literal("Could not add velocity: Velocity is too large"));
+            return 0;
+        }
+
+        List<Entity> successful = new ArrayList<>();
+        for (Entity target: targets) {
+            Vec3 newVelocity = target.getDeltaMovement().add(velocity);
+            if (newVelocity.length() > MAXIMUM_VELOCITY) continue;
+            target.setDeltaMovement(newVelocity);
+            target.hurtMarked = true;
+            successful.add(target);
+        }
+
+        if (successful.isEmpty())
+            ctx.getSource().sendFailure(Component.literal("Could not add velocity: Resultant velocity was too large"));
+        else if (successful.size() == 1)
+            ctx.getSource().sendSuccess(() -> Component.literal("Added velocity to ")
+                    .append(successful.iterator().next().getDisplayName()), true);
+        else ctx.getSource().sendSuccess(() -> Component.literal(String.format("Added velocity to %s targets",
+                    successful.size())), true);
+
+        return successful.size();
     }
 }
