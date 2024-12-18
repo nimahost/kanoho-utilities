@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "kanoho",
+  "version": "${version}",
+  "name": "kanoho-utilities",
+  "description": "A mod  to add various utilities used by Kanoho.",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/kanoho/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "ec.brooke.kanoho.Kanoho"
+    ]
+  },
+  "mixins": [
+    "kanoho.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
