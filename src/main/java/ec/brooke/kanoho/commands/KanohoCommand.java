@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-public abstract class BaseCommand {
+public abstract class KanohoCommand {
 
     public static LiteralArgumentBuilder<CommandSourceStack> literal(String literal) {
         return Commands.literal(literal);
