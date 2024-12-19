@@ -15,9 +15,8 @@ public class TestCommand extends KanohoCommand {
 
     private static int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         CommandSourceStack ss = ctx.getSource();
-        var marker = new Marker(ss.getLevel(), ss.getPlayer());
+        var marker = new Marker(ss.getPlayer(), ss.getPosition());
         Kanoho.ephemerality.add(marker, ss.getPlayer());
-        marker.setPos(ss.getPosition());
 
         ctx.getSource().sendSuccess(() -> Component.literal("1 Command Tested 👍😎"), true);
         return 1;
