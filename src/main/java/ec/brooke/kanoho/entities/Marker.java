@@ -15,14 +15,13 @@ import org.joml.Vector3f;
  */
 public class Marker extends Display.ItemDisplay {
     public static final int DETACH_DISTANCE = 16*4;
-    public static final double SIZE = 0.25;
 
-    private final Player subject;
+    private final Player target;
     private final Vec3 anchor;
 
     public Marker(Player subject, Vec3 anchor) {
         super(EntityType.ITEM_DISPLAY, subject.level());
-        this.subject = subject;
+        this.target = subject;
         this.anchor = anchor;
 
         // Setup
@@ -34,14 +33,16 @@ public class Marker extends Display.ItemDisplay {
 
     @Override
     public void tick() {
-        Vec3 eye = subject.getEyePosition();
+        Vec3 eye = target.getEyePosition();
         Vec3 pos = anchor;
 
+        float distance = (float) eye.distanceTo(pos);
+        float scale = Mth.sqrt(distance);
+
         // Keep within render distance
-        double distance = eye.distanceTo(pos);
         if (distance >= DETACH_DISTANCE) {
-            double d = DETACH_DISTANCE / distance;
-            distance = DETACH_DISTANCE;
+            float d = DETACH_DISTANCE / distance;
+            scale *= DETACH_DISTANCE / distance;
 
             pos = new Vec3(
                     eye.x - ((eye.x - pos.x) * d),
@@ -55,11 +56,7 @@ public class Marker extends Display.ItemDisplay {
         setTransformation(new Transformation(
                 new Vector3f(0,0,0),
                 new Quaternionf(),
-                new Vector3f(
-                        (float) (distance * SIZE),
-                        (float) (distance * SIZE),
-                        (float) (distance * SIZE)
-                ),
+                new Vector3f(scale, scale, 0),
                 new Quaternionf()
         ));
 
