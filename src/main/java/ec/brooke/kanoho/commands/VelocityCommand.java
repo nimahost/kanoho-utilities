@@ -115,10 +115,8 @@ public class VelocityCommand extends KanohoCommand {
         if (successful.isEmpty())
             throw ERROR_TOO_LARGE.create();
         else if (successful.size() == 1)
-            ctx.getSource().sendSuccess(() -> Component.literal("Added velocity to ")
-                    .append(successful.iterator().next().getDisplayName()), true);
-        else ctx.getSource().sendSuccess(() -> Component.literal(String.format("Added velocity to %s targets",
-                    successful.size())), true);
+            ctx.getSource().sendSuccess(() -> Component.literal("Added velocity to ").append(successful.getFirst().getDisplayName()), true);
+        else ctx.getSource().sendSuccess(() -> Component.literal(String.format("Added velocity to %s targets", successful.size())), true);
 
         return successful.size();
     }
