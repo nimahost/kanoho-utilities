@@ -1,19 +1,20 @@
 package ec.brooke.kanoho.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.entities.Marker;
+import ec.brooke.kanoho.entities.markers.Marker;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
 public class TestCommand extends KanohoCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("test").executes(TestCommand::execute));
+    @Override
+    protected LiteralArgumentBuilder<CommandSourceStack> define() {
+        return literal("test").executes(this::execute);
     }
 
-    private static int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    private int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         CommandSourceStack ss = ctx.getSource();
         var marker = new Marker(ss.getPlayer(), ss.getPosition());
         Kanoho.ephemerality.add(marker, ss.getPlayer());
