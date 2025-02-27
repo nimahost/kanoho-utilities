@@ -1,6 +1,6 @@
 package ec.brooke.kanoho;
 
-import ec.brooke.kanoho.commands.TestCommand;
+import ec.brooke.kanoho.commands.VelocityCommand;
 import net.fabricmc.api.ModInitializer;
 
 public class Kanoho implements ModInitializer {
@@ -8,7 +8,6 @@ public class Kanoho implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ephemerality = new EphemeralityManager();
-        new TestCommand().register();
+        new VelocityCommand().register();
     }
 }

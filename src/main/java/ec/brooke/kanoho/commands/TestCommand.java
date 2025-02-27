@@ -9,6 +9,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
 public class TestCommand extends KanohoCommand {
+
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
         return literal("test").executes(this::execute);
