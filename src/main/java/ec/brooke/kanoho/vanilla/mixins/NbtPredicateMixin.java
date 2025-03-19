@@ -12,8 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NbtPredicate.class)
 public abstract class NbtPredicateMixin {
+
     @Inject(method = "getEntityTagToCompare", at = @At(value = "RETURN"))
     private static void injectStatus(Entity entity, CallbackInfoReturnable<CompoundTag> cir) {
+        // Add status tag when using getting item NBT
         if (entity instanceof ServerPlayer player) ((IServerPlayer) player).kanoho$putStatus(cir.getReturnValue());
     }
 }

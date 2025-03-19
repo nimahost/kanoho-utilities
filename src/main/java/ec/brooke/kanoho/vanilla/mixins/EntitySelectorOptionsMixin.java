@@ -14,8 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EntitySelectorOptions.class)
 public abstract class EntitySelectorOptionsMixin {
 
+    // Injected into lambda, view bytecode to update target
     @Inject(method = "method_9957", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtUtils;compareNbt(Lnet/minecraft/nbt/Tag;Lnet/minecraft/nbt/Tag;Z)Z"))
     private static void injectStatus(CompoundTag compoundTag, boolean bl, Entity entity, CallbackInfoReturnable<Boolean> cir, @Local(ordinal = 1) CompoundTag tag) {
+        // Add status tag when using entity target selector
         if (entity instanceof ServerPlayer player) ((IServerPlayer) player).kanoho$putStatus(tag);
     }
 

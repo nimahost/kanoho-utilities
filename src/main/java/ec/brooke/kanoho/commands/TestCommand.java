@@ -5,9 +5,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import ec.brooke.kanoho.Kanoho;
 import ec.brooke.kanoho.entities.markers.Marker;
+import jdk.jfr.Experimental;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 
+@Experimental
 public class TestCommand extends KanohoCommand {
 
     @Override

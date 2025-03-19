@@ -15,11 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Consumable.class)
 public abstract class ConsumableMixin {
 
+    // Handle updating player status and preventing item consumption if component set
     @Inject(method = "onConsume", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;consume(ILnet/minecraft/world/entity/LivingEntity;)V"))
     private void cancelConsume(Level level, LivingEntity entity, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         if (entity instanceof ServerPlayer player) {
-            ((IServerPlayer) player).kanoho$getStatus().put(KanohoComponents.USABLE_DATA.location(), stack.save(player.registryAccess()));
-            KanohoComponents.USABLE_DATA.from(stack).ifPresent(consumed -> {
+            ((IServerPlayer) player).kanoho$getStatus().put(KanohoComponents.CONSUMED.location(), stack.save(player.registryAccess()));
+            KanohoComponents.CONSUMED.from(stack).ifPresent(consumed -> {
                 if (!consumed) return;
                 player.containerMenu.broadcastFullState();
                 cir.setReturnValue(stack);

@@ -1,7 +1,7 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.components.UsableComponent;
+import ec.brooke.kanoho.components.KanohoComponents;
 import ec.brooke.kanoho.vanilla.IServerPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,7 +29,8 @@ public class ServerPlayerMixin implements IServerPlayer {
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void injectStatus(CallbackInfo ci) {
-        status.remove(UsableComponent.STATUS_KEY);
+        // Reset consumed status at the end of the next tick
+        status.remove(KanohoComponents.CONSUMED.location());
     }
 
 }

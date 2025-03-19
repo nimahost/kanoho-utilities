@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Command to modify entity velocities, including players
+ */
 public class VelocityCommand extends KanohoCommand {
     private static final SimpleCommandExceptionType ERROR_TOO_LARGE = new SimpleCommandExceptionType(Component.literal("Could not set velocity: Velocity is too large"));
 
@@ -34,6 +37,11 @@ public class VelocityCommand extends KanohoCommand {
                                         .executes(this::addVelocity))));
     }
 
+    /**
+     * Calculates the executor's resultant velocity from a command's arguments
+     * @param ctx The context to get arguments from
+     * @return Vector of the resultant velocity
+     */
     private Vec3 calculateVelocity(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack source = ctx.getSource();
 
