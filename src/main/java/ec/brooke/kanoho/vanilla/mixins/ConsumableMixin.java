@@ -21,7 +21,7 @@ public abstract class ConsumableMixin {
         if (entity instanceof ServerPlayer player) {
             ((IServerPlayer) player).kanoho$getStatus().put(KanohoComponents.CONSUMED.location(), stack.save(player.registryAccess()));
             KanohoComponents.CONSUMED.from(stack).ifPresent(consumed -> {
-                if (!consumed) return;
+                if (consumed) return;
                 player.containerMenu.broadcastFullState();
                 cir.setReturnValue(stack);
                 cir.cancel();
