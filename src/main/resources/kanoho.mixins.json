@@ -1,11 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "ec.brooke.kanoho.mixin",
+  "package": "ec.brooke.kanoho.vanilla.mixins",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-  ],
-  "client": [
+    "ConsumableMixin",
+    "EntitySelectorOptionsMixin",
+    "NbtPredicateMixin",
+    "ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

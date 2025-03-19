@@ -8,6 +8,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public abstract class KanohoCommand {
+
     protected abstract LiteralArgumentBuilder<CommandSourceStack> define();
 
     public final void register() {
