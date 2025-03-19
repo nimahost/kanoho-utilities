@@ -22,9 +22,7 @@ public abstract class KanohoCommand {
      * Setup this command to be registered, must be called before {@link CommandRegistrationCallback} is fired
      */
     public final void register() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(define());
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(define()));
     }
 
     /**
