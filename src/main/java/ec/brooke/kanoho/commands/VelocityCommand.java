@@ -4,6 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import ec.brooke.kanoho.Kanoho;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
@@ -23,7 +24,7 @@ import java.util.Collection;
 public class VelocityCommand extends KanohoCommand {
     private static final SimpleCommandExceptionType ERROR_TOO_LARGE = new SimpleCommandExceptionType(Component.literal("Could not set velocity: Velocity is too large"));
 
-    private static final int MAXIMUM_VELOCITY = 100;
+    private static final double MAXIMUM_VELOCITY = Kanoho.CONFIG.maximumVelocity;
 
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
