@@ -1,6 +1,6 @@
 package ec.brooke.kanoho;
 
-import ec.brooke.kanoho.commands.QualityCommand;
+import ec.brooke.kanoho.commands.ResourcepackCommand;
 import ec.brooke.kanoho.commands.VelocityCommand;
 import ec.brooke.kanoho.resourcepack.ResourcepackLibrary;
 import net.fabricmc.api.ModInitializer;
@@ -18,6 +18,6 @@ public class Kanoho implements ModInitializer {
     @Override
     public void onInitialize() {
         new VelocityCommand().register();
-        new QualityCommand().register();
+        new ResourcepackCommand().register();
     }
 }

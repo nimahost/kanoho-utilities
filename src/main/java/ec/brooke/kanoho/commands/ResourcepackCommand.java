@@ -10,13 +10,13 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-public class QualityCommand extends KanohoCommand {
+public class ResourcepackCommand extends KanohoCommand {
     private static final SimpleCommandExceptionType ERROR_NOT_PLAYER = new SimpleCommandExceptionType(Component.literal("Executor must be a player"));
     private static final SimpleCommandExceptionType ERROR_NOT_OPTION = new SimpleCommandExceptionType(Component.literal("Invalid quality option"));
 
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
-        return literal("quality").then(argument("name", StringArgumentType.string())
+        return literal("resourcepack").then(argument("name", StringArgumentType.string())
                         .suggests(search(Kanoho.resourcepacks::getNames))
                         .executes(this::execute));
     }
