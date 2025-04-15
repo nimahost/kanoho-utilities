@@ -3,6 +3,7 @@ package ec.brooke.kanoho.resourcepack;
 import ec.brooke.kanoho.Kanoho;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.resources.CloseableResourceManager;
 import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.github.GHAsset;
 import org.kohsuke.github.GHRelease;
@@ -25,42 +26,45 @@ public class ResourcepackLibrary {
 
     public ResourcepackLibrary() {
         ServerLifecycleEvents.SERVER_STARTING.register(this::reload);
+        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register((s, c) -> this.reload(s));
     }
 
     public void reload(MinecraftServer server) {
-        Kanoho.LOGGER.info("Reloading resource pack library...");
-        library.clear();
+        new Thread(() -> {
+            Kanoho.LOGGER.info("Reloading resource pack library...");
+            library.clear();
 
-        try {
-            GitHub github = new GitHubBuilder().build();
-            GHRelease release = github.getRepository(Kanoho.CONFIG.resourcepackGitHub).getLatestRelease();
+            try {
+                GitHub github = new GitHubBuilder().build();
+                GHRelease release = github.getRepository(Kanoho.CONFIG.resourcepackGitHub).getLatestRelease();
 
-            GHAsset index = release.getAssets().stream().filter(a -> INDEX_FILENAME.equals(a.getName())).findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("Could not find '%s' in release assets".formatted(INDEX_FILENAME)));
+                GHAsset index = release.getAssets().stream().filter(a -> INDEX_FILENAME.equals(a.getName())).findFirst()
+                        .orElseThrow(() -> new NoSuchElementException("Could not find '%s' in release assets".formatted(INDEX_FILENAME)));
 
-            // Request index file
-            URLConnection conn = URI.create(index.getBrowserDownloadUrl()).toURL().openConnection(server.getProxy());
-            conn.setDoInput(true);
-            conn.connect();
+                // Request index file
+                URLConnection conn = URI.create(index.getBrowserDownloadUrl()).toURL().openConnection(server.getProxy());
+                conn.setDoInput(true);
+                conn.connect();
 
-            // Parse lines
-            new BufferedReader(new InputStreamReader(conn.getInputStream())).lines().forEach(line -> {
-                if (line.isEmpty()) return;
+                // Parse lines
+                new BufferedReader(new InputStreamReader(conn.getInputStream())).lines().forEach(line -> {
+                    if (line.isEmpty()) return;
 
-                String[] split = line.split(" {2}", 2);
-                if (split.length != 2) throw new IndexOutOfBoundsException("Invalid index file");
-                String name = FilenameUtils.removeExtension(split[1]);
+                    String[] split = line.split(" {2}", 2);
+                    if (split.length != 2) throw new IndexOutOfBoundsException("Invalid index file");
+                    String name = FilenameUtils.removeExtension(split[1]);
 
-                GHAsset asset = release.getAssets().stream().filter(a -> a.getName().equals(split[1])).findFirst()
-                        .orElseThrow(() -> new NoSuchElementException("Could not find '%s' in release assets".formatted(split[1])));
+                    GHAsset asset = release.getAssets().stream().filter(a -> a.getName().equals(split[1])).findFirst()
+                            .orElseThrow(() -> new NoSuchElementException("Could not find '%s' in release assets".formatted(split[1])));
 
-                library.put(name, new ResourcepackDefinition(split[0], asset.getBrowserDownloadUrl()));
-            });
-        } catch (IOException | NoSuchElementException | IndexOutOfBoundsException e) {
-            Kanoho.LOGGER.error("Failed to reload resource pack library", e);
-        }
+                    library.put(name, new ResourcepackDefinition(split[0], asset.getBrowserDownloadUrl()));
+                });
+            } catch (IOException | NoSuchElementException | IndexOutOfBoundsException e) {
+                Kanoho.LOGGER.error("Failed to reload resource pack library", e);
+            }
 
-        Kanoho.LOGGER.info("Loaded resource packs {}", getNames());
+            Kanoho.LOGGER.info("Loaded resource packs {}", getNames());
+        }).start();
     }
 
     public ResourcepackDefinition getPack(String name) {
