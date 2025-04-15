@@ -16,7 +16,15 @@ import java.nio.file.Path;
  */
 public class KanohoConfig {
 
+    /**
+     * The maximum resultant velocity from the /velocity command.
+     */
     public double maximumVelocity = 100;
+
+    /**
+     * The GitHub repository containing the resourcepack in the form of owner/repo.
+     */
+    public String resourcepackGitHub = "nimahost/kanoho-resource-pack";
 
     /**
      * Load the configuration file or the default
