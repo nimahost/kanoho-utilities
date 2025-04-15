@@ -3,9 +3,15 @@ package ec.brooke.kanoho.commands;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+
+import java.util.Collection;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 /***
  * Base class for all Kanoho Brigadier commands
@@ -45,4 +51,20 @@ public abstract class KanohoCommand {
         return Commands.argument(name, type);
     }
 
+    /**
+     * Creates a {@link SuggestionProvider} for the options provided by the supplier
+     * @param options A function to retrieve options
+     * @return The resultant {@link SuggestionProvider}
+     */
+    protected static SuggestionProvider<CommandSourceStack> search(Supplier<Iterable<String>> options) {
+        return (ctx, builder) -> {
+            String remaining = builder.getRemainingLowerCase();
+
+            for (String option : options.get())
+                if (remaining.isBlank() || option.toLowerCase().contains(remaining))
+                    builder.suggest(option);
+
+            return builder.buildFuture();
+        };
+    }
 }

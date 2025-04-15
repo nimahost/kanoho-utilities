@@ -19,5 +19,4 @@ public record ResourcepackDefinition(String hash, String url) {
                 Optional.of(PROMPT)
         );
     }
-
 }

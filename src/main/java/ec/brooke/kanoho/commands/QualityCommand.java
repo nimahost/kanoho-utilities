@@ -8,30 +8,37 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import ec.brooke.kanoho.Kanoho;
+import net.fabricmc.fabric.mixin.gametest.ArgumentTypesMixin;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 public class QualityCommand extends KanohoCommand {
     private static final SimpleCommandExceptionType ERROR_NOT_PLAYER = new SimpleCommandExceptionType(Component.literal("Executor must be a player"));
+    private static final SimpleCommandExceptionType ERROR_NOT_OPTION = new SimpleCommandExceptionType(Component.literal("Invalid quality option"));
 
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
-        return literal("quality").then(argument("name", StringArgumentType.string()).suggests(this::suggest).executes(this::execute));
+        return literal("quality").then(argument("name", StringArgumentType.string())
+                        .suggests(search(Kanoho.resourcepacks::getNames))
+                        .executes(this::execute));
     }
 
     private int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        if (!ctx.getSource().isPlayer()) throw ERROR_NOT_PLAYER.create();
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player == null) throw ERROR_NOT_PLAYER.create();
 
         String name = StringArgumentType.getString(ctx, "name");
-        Objects.requireNonNull(ctx.getSource().getPlayer()).connection.send(Kanoho.resourcepacks.getPack(name).packet());
-        return 1;
-    }
+        if (!Kanoho.resourcepacks.contains(name)) throw ERROR_NOT_OPTION.create();
 
-    private CompletableFuture<Suggestions> suggest(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) throws CommandSyntaxException {
-        Kanoho.resourcepacks.getNames().forEach(builder::suggest);
-        return builder.buildFuture();
+        player.connection.send(Kanoho.resourcepacks.getPack(name).packet());
+
+        ctx.getSource().sendSuccess(() -> Component.literal("Set quality level to ").append(name), true);
+        return 1;
     }
 }
