@@ -16,7 +16,6 @@ import java.net.URI;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 
 public class ResourcepackLibrary {

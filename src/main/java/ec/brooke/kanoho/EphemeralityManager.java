@@ -62,7 +62,7 @@ public class EphemeralityManager {
                     type.updateInterval(),
                     type.trackDeltas(),
                     target.connection::send
-            );;
+            );
         }
 
         /**
