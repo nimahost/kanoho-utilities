@@ -2,6 +2,7 @@ package ec.brooke.kanoho.resourcepack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
+import net.minecraft.server.MinecraftServer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;

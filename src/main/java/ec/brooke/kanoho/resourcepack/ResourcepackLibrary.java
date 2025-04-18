@@ -1,9 +1,11 @@
 package ec.brooke.kanoho.resourcepack;
 
 import ec.brooke.kanoho.Kanoho;
+import ec.brooke.kanoho.components.EntityComponents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.packs.resources.CloseableResourceManager;
+import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.io.FilenameUtils;
 import org.kohsuke.github.GHAsset;
 import org.kohsuke.github.GHRelease;
@@ -27,12 +29,19 @@ public class ResourcepackLibrary {
     public ResourcepackLibrary() {
         ServerLifecycleEvents.SERVER_STARTING.register(this::reload);
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register((s, c) -> this.reload(s));
+        ServerPlayConnectionEvents.JOIN.register((l, s, m) -> this.push(l.player));
+    }
+
+    public void push(ServerPlayer player) {
+        String name = EntityComponents.RESOURCEPACK.from(player).orElse(Kanoho.CONFIG.resourcepackDefault);
+        if (contains(name)) player.connection.send(get(name).packet());
     }
 
     public void reload(MinecraftServer server) {
+        library.clear();
+
         new Thread(() -> {
             Kanoho.LOGGER.info("Reloading resource pack library...");
-            library.clear();
 
             try {
                 GitHub github = new GitHubBuilder().build();
@@ -63,11 +72,14 @@ public class ResourcepackLibrary {
                 Kanoho.LOGGER.error("Failed to reload resource pack library", e);
             }
 
-            Kanoho.LOGGER.info("Loaded resource packs {}", getNames());
+            Kanoho.LOGGER.info("Loaded resource packs {}", names());
+
+            // Update player packs
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) push(player);
         }).start();
     }
 
-    public ResourcepackDefinition getPack(String name) {
+    public ResourcepackDefinition get(String name) {
         return library.get(name);
     }
 
@@ -75,7 +87,7 @@ public class ResourcepackLibrary {
         return library.containsKey(name);
     }
 
-    public Set<String> getNames() {
+    public Set<String> names() {
         return library.keySet();
     }
 }

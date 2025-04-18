@@ -27,6 +27,11 @@ public class KanohoConfig {
     public String resourcepackGitHub = "nimahost/kanoho-resource-pack";
 
     /**
+     * The default resourcepack option for new players.
+     */
+    public String resourcepackDefault = "kanoho-space-low";
+
+    /**
      * Load the configuration file or the default
      * @return The loaded configuration file
      */

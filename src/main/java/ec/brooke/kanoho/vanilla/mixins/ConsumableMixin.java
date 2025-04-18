@@ -35,7 +35,7 @@ public abstract class ConsumableMixin {
     }
 
     @Accessor
-    public abstract float getConsumeSeconds();
+    protected abstract float getConsumeSeconds();
 
     // If the consume time is zero, set to non-existent namespace to prevent
     @Inject(method = "sound", cancellable = true, at = @At(value = "RETURN"))

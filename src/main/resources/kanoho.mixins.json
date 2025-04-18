@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ConsumableMixin",
-    "ItemStackMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "ItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1
