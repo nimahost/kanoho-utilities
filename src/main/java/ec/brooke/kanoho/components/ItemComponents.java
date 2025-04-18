@@ -5,12 +5,12 @@ import com.mojang.serialization.Codec;
 import javax.naming.OperationNotSupportedException;
 
 /**
- * Static class containing all Kanoho custom components
+ * Static class containing all Kanoho item components
  */
-public class KanohoComponents {
+public class ItemComponents {
     public static final ComponentType<Boolean> CONSUMED = new ComponentType<>("consumed", Codec.BOOL);
 
-    public KanohoComponents() throws OperationNotSupportedException {
+    public ItemComponents() throws OperationNotSupportedException {
         throw new OperationNotSupportedException("Class should not be instantiated");
     }
 }

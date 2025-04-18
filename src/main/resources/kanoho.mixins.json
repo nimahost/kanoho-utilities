@@ -5,9 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ConsumableMixin",
-    "EntitySelectorOptionsMixin",
-    "NbtPredicateMixin",
-    "ServerPlayerMixin"
+    "ItemStackMixin",
+    "EntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
