@@ -44,18 +44,23 @@ public class KanohoConfig {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(Kanoho.MOD_ID + ".json");
         Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
-        if (!Files.exists(path)) try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-            KanohoConfig config = new KanohoConfig();
-            gson.toJson(config, writer);
-            return config;
-        }
+        KanohoConfig instance;
 
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        } else try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            return gson.fromJson(reader, KanohoConfig.class);
+        // Load config file if it exists
+        if (!Files.exists(path)) instance = new KanohoConfig();
+        else try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+            instance = gson.fromJson(reader, KanohoConfig.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        // Write config file to disk in case any updates
+        try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+            gson.toJson(instance, writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return instance;
     }
 }
