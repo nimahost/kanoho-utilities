@@ -16,7 +16,7 @@ import java.util.UUID;
 public record ResourcepackDefinition(String hash, String url) {
     /** The prompt showed to users apply this pack */
     public static final Component PROMPT = Component.literal("Kanoho is better with it's official Resource Pack!")
-            .withStyle(ChatFormatting.BOLD, ChatFormatting.DARK_RED);
+            .withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD);
 
     /**
      * @return a resource pack packet to apply this definition.

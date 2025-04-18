@@ -4,6 +4,10 @@ import ec.brooke.kanoho.Kanoho;
 import ec.brooke.kanoho.framework.components.EntityComponents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.io.FilenameUtils;
@@ -29,6 +33,9 @@ public class ResourcepackLibrary {
     /** The name of the release asset containing the SHA1s of the options */
     public static final String INDEX_FILENAME = "checksums.txt";
 
+    /** The message sent to players when their resource pack can't be applied */
+    public static final Component ERROR_MESSAGE = Component.literal("Could not apply resource pack :(").withStyle(ChatFormatting.RED);
+
     private final HashMap<String, ResourcepackDefinition> library = new HashMap<>();
 
     public ResourcepackLibrary() {
@@ -44,6 +51,14 @@ public class ResourcepackLibrary {
     public void push(ServerPlayer player) {
         String name = EntityComponents.RESOURCEPACK.from(player).orElse(Kanoho.CONFIG.resourcepackDefault);
         if (contains(name)) player.connection.send(get(name).packet());
+        else {
+            // Send error message
+            player.sendSystemMessage(ERROR_MESSAGE);
+            String command = "/resourcepack %s".formatted(name);
+            player.sendSystemMessage(Component.literal("Click to Retry").withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command)))
+            );
+        }
     }
 
     /**
