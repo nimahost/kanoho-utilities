@@ -29,7 +29,7 @@ public class KanohoConfig {
     /**
      * The default resourcepack option for new players
      */
-    public String resourcepackDefault = "kanoho-space-low";
+    public String resourcepackDefault = "kanoho-space-normal";
 
     /**
      * The prompt shown to players when they are asked to apply a resource pack
