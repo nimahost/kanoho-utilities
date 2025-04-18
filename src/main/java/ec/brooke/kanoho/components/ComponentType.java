@@ -60,24 +60,17 @@ public class ComponentType<T> {
      * @return An optional containing the instance if it was found
      */
     public Optional<T> from(Object holder) {
-        if (holder instanceof IComponentHolder h) return h.kanoho$get(this);
+        if (holder instanceof CompoundTag tag) {
+            Tag component = tag.get(location);
+            if (component == null) return Optional.empty();
+
+            DataResult<T> result = codec.parse(NbtOps.INSTANCE, component);
+            return result.resultOrPartial();
+        } else if (holder instanceof IComponentHolder h) return h.kanoho$get(this);
         else {
             Kanoho.LOGGER.warn("Tried get {} from non-{} class {}", this.location, IComponentHolder.class.getName(), holder.getClass().getName());
             return Optional.empty();
         }
-    }
-
-    /**
-     * Creates an instance of this component if it exists in the provided name tag
-     * @param tag The name tag to get the component from
-     * @return An optional containing the instance if it was found
-     */
-    public Optional<T> fromTag(CompoundTag tag) {
-        Tag component = tag.get(location);
-        if (component == null) return Optional.empty();
-
-        DataResult<T> result = codec.parse(NbtOps.INSTANCE, component);
-        return result.resultOrPartial();
     }
 
     /**
@@ -86,18 +79,11 @@ public class ComponentType<T> {
      * @param value The value to set the component to
      */
     public void to(Object holder, T value) {
-        if (holder instanceof IComponentHolder h) h.kanoho$set(this, value);
+        if (holder instanceof CompoundTag tag) {
+            Tag component = codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow();
+            tag.put(location, component);
+        } else if (holder instanceof IComponentHolder h) h.kanoho$set(this, value);
         else Kanoho.LOGGER.warn("Tried set {} in non-{} class {}", this.location, IComponentHolder.class.getName(), holder.getClass().getName());
-    }
-
-    /**
-     * Sets the value of this component to the provided namespace tag
-     * @param tag The namespace tag to set to component into
-     * @param value The value to set the component
-     */
-    public void toTag(CompoundTag tag, T value) {
-        Tag component = codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow();
-        tag.put(location, component);
     }
 
     /**
@@ -106,7 +92,8 @@ public class ComponentType<T> {
      * @return True if the component exists
      */
     public boolean in(Object holder) {
-        if (holder instanceof IComponentHolder h) return h.kanoho$contains(this);
+        if (holder instanceof CompoundTag tag) return tag.contains(location);
+        else if (holder instanceof IComponentHolder h) return h.kanoho$contains(this);
         else {
             Kanoho.LOGGER.warn("Tried check if {} is in non-{} class {}", this.location, IComponentHolder.class.getName(), holder.getClass().getName());
             return false;
@@ -118,15 +105,8 @@ public class ComponentType<T> {
      * @param holder The holder to remove from
      */
     public void remove(Object holder) {
-        if (holder instanceof IComponentHolder h) h.kanoho$remove(this);
+        if (holder instanceof CompoundTag tag) tag.remove(location);
+        else if (holder instanceof IComponentHolder h) h.kanoho$remove(this);
         else Kanoho.LOGGER.warn("Tried remove {} from non-{} class {}", this.location, IComponentHolder.class.getName(), holder.getClass().getName());
-    }
-
-    /**
-     * Removes this component from the provided namespace tag
-     * @param tag The namespace tag to remove from
-     */
-    public void removeTag(CompoundTag tag) {
-        tag.remove(location);
     }
 }

@@ -25,17 +25,17 @@ public abstract class ItemStackMixin implements IComponentHolder {
 
     @Override
     public <T> Optional<T> kanoho$get(ComponentType<T> component) {
-        return getCustomData().flatMap(d -> component.fromTag(d.copyTag()));
+        return getCustomData().flatMap(d -> component.from(d.copyTag()));
     }
 
     @Override
     public <T> void kanoho$set(ComponentType<T> component, T value) {
-        CustomData.update(DataComponents.CUSTOM_DATA, itemstack(), t -> ComponentType.namespace(t).ifPresent(n -> component.toTag(n, value)));
+        CustomData.update(DataComponents.CUSTOM_DATA, itemstack(), t -> ComponentType.namespace(t).ifPresent(n -> component.to(n, value)));
     }
 
     @Override
     public boolean kanoho$contains(ComponentType<?> component) {
-        return kanoho$get(component).isPresent();
+        return getCustomData().orElse(CustomData.EMPTY).contains(component.location);
     }
 
     @Override

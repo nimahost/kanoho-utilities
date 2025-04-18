@@ -38,21 +38,21 @@ public abstract class EntityMixin implements IComponentHolder {
 
     @Override
     public <T> Optional<T> kanoho$get(ComponentType<T> component) {
-        return component.fromTag(components);
+        return component.from(components);
     }
 
     @Override
     public <T> void kanoho$set(ComponentType<T> component, T value) {
-        component.toTag(components, value);
+        component.to(components, value);
     }
 
     @Override
     public boolean kanoho$contains(ComponentType<?> component) {
-        return kanoho$get(component).isPresent();
+        return component.in(components);
     }
 
     @Override
     public void kanoho$remove(ComponentType<?> component) {
-        component.removeTag(components);
+        component.remove(components);
     }
 }

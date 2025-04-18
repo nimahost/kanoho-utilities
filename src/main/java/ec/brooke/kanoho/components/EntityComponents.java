@@ -12,7 +12,7 @@ public class EntityComponents {
     public static final ComponentType<ItemStack> CONSUMED = new ComponentType<>("consumed", ItemStack.CODEC);
     public static final ComponentType<String> RESOURCEPACK = new ComponentType<>("resourcepack", Codec.STRING);
 
-    public EntityComponents() throws OperationNotSupportedException {
+    private EntityComponents() throws OperationNotSupportedException {
         throw new OperationNotSupportedException("Class should not be instantiated");
     }
 }

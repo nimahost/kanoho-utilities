@@ -11,8 +11,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.Objects;
-
+/**
+ * A command for players to select their preferred resourcepack
+ */
 public class ResourcepackCommand extends KanohoCommand {
     private static final SimpleCommandExceptionType ERROR_ALREADY = new SimpleCommandExceptionType(Component.literal("Already using that resource pack"));
     private static final SimpleCommandExceptionType ERROR_NOT_PLAYER = new SimpleCommandExceptionType(Component.literal("Executor must be a player"));
@@ -41,7 +42,7 @@ public class ResourcepackCommand extends KanohoCommand {
 
         // Send packet and feedback
         player.connection.send(Kanoho.resourcepacks.get(name).packet());
-        ctx.getSource().sendSuccess(() -> Component.literal("Set resourcepack level to ").append(name), true);
+        ctx.getSource().sendSuccess(() -> Component.literal("Set resource pack level to ").append(name), true);
         return 1;
     }
 }

@@ -21,7 +21,13 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+/**
+ * Represents a library of resource packs players can choose between
+ *
+ * This class is responsible for generating this library from GitHub
+ */
 public class ResourcepackLibrary {
+    /** The name of the release asset containing the SHA1s of the options */
     public static final String INDEX_FILENAME = "checksums.txt";
 
     private final HashMap<String, ResourcepackDefinition> library = new HashMap<>();
@@ -32,11 +38,19 @@ public class ResourcepackLibrary {
         ServerPlayConnectionEvents.JOIN.register((l, s, m) -> this.push(l.player));
     }
 
+    /**
+     * Applies their selected resource pack to the specified player
+     * @param player The player to reload
+     */
     public void push(ServerPlayer player) {
         String name = EntityComponents.RESOURCEPACK.from(player).orElse(Kanoho.CONFIG.resourcepackDefault);
         if (contains(name)) player.connection.send(get(name).packet());
     }
 
+    /**
+     * Reloads the resource pack library from GitHub.
+     * @param server The current instance of {@link MinecraftServer}
+     */
     public void reload(MinecraftServer server) {
         library.clear();
 
@@ -79,14 +93,25 @@ public class ResourcepackLibrary {
         }).start();
     }
 
+    /**
+     * @param name The name of the resource pack
+     * @return The resource pack with the given name
+     */
     public ResourcepackDefinition get(String name) {
         return library.get(name);
     }
 
+    /**
+     * @param name The name of the resource pack
+     * @return Whether the library contains a resource pack with the specified name
+     */
     public boolean contains(String name) {
         return library.containsKey(name);
     }
 
+    /**
+     * @return The collection of all resource pack names in the library
+     */
     public Set<String> names() {
         return library.keySet();
     }

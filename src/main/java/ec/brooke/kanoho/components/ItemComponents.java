@@ -10,7 +10,7 @@ import javax.naming.OperationNotSupportedException;
 public class ItemComponents {
     public static final ComponentType<Boolean> CONSUMED = new ComponentType<>("consumed", Codec.BOOL);
 
-    public ItemComponents() throws OperationNotSupportedException {
+    private ItemComponents() throws OperationNotSupportedException {
         throw new OperationNotSupportedException("Class should not be instantiated");
     }
 }
