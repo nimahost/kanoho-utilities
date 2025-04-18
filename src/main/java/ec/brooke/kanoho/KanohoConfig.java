@@ -42,13 +42,15 @@ public class KanohoConfig {
      */
     public static KanohoConfig load() {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(Kanoho.MOD_ID + ".json");
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
         if (!Files.exists(path)) try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             KanohoConfig config = new KanohoConfig();
             gson.toJson(config, writer);
             return config;
-        } catch (IOException e) {
+        }
+
+        catch (IOException e) {
             throw new RuntimeException(e);
         } else try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             return gson.fromJson(reader, KanohoConfig.class);
