@@ -17,7 +17,7 @@ import java.nio.file.Path;
 public class KanohoConfig {
 
     /**
-     * The maximum resultant velocity from the /velocity command.
+     * The maximum resultant velocity from the /velocity command
      */
     public double maximumVelocity = 100;
 
@@ -27,9 +27,14 @@ public class KanohoConfig {
     public String resourcepackGitHub = "nimahost/kanoho-resource-pack";
 
     /**
-     * The default resourcepack option for new players.
+     * The default resourcepack option for new players
      */
     public String resourcepackDefault = "kanoho-space-low";
+
+    /**
+     * The prompt shown to players when they are asked to apply a resource pack
+     */
+    public String resourcepackPrompt = "{text:\"Kanoho is better with it's official Resource Pack!\",bold:true,color:\"gold\"}";
 
     /**
      * Load the configuration file or the default

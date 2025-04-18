@@ -1,6 +1,7 @@
 package ec.brooke.kanoho.features.resourcepack;
 
-import net.minecraft.ChatFormatting;
+import ec.brooke.kanoho.Kanoho;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
 
@@ -14,9 +15,14 @@ import java.util.UUID;
  * @param url The URL to download this resource pack from
  */
 public record ResourcepackDefinition(String hash, String url) {
-    /** The prompt showed to users apply this pack */
-    public static final Component PROMPT = Component.literal("Kanoho is better with it's official Resource Pack!")
-            .withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD);
+    /** The prompt shown to players when they are asked to apply a resource pack */
+    public static final Component PROMPT;
+
+    static {
+        Component prompt = Component.Serializer.fromJson(Kanoho.CONFIG.resourcepackPrompt, RegistryAccess.EMPTY);
+        if (prompt == null) throw new RuntimeException("Could not parse resource pack prompt");
+        PROMPT = prompt;
+    }
 
     /**
      * @return a resource pack packet to apply this definition.
