@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.UUID;
 
 /***
  * Mod configuration model
@@ -35,6 +36,11 @@ public class KanohoConfig {
      * The prompt shown to players when they are asked to apply a resource pack
      */
     public String resourcepackPrompt = "{text:\"Kanoho is better with it's official Resource Pack!\",bold:true,color:\"gold\"}";
+
+    /**
+     * The UUID used to identify resource packs
+     */
+    public UUID resourcepackUuid = UUID.randomUUID();
 
     /**
      * Load the configuration file or the default

@@ -7,7 +7,6 @@ import net.minecraft.network.protocol.common.ClientboundResourcePackPopPacket;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Represents a resource pack that players can select
@@ -15,9 +14,6 @@ import java.util.UUID;
  * @param url The URL to download this resource pack from
  */
 public record ResourcepackDefinition(String hash, String url) {
-    /** The UUID used to specify the packs should be replaced instead of stacked */
-    public static final UUID PACK_UUID = UUID.randomUUID();
-
     /** The prompt shown to players when they are asked to apply a resource pack */
     public static final Component PROMPT;
 
@@ -32,7 +28,7 @@ public record ResourcepackDefinition(String hash, String url) {
      */
     public ClientboundResourcePackPushPacket push() {
         return new ClientboundResourcePackPushPacket(
-                PACK_UUID,
+                Kanoho.CONFIG.resourcepackUuid,
                 url,
                 hash,
                 true,
@@ -44,6 +40,6 @@ public record ResourcepackDefinition(String hash, String url) {
      * @return a resource pack packet to remove this pack
      */
     public static ClientboundResourcePackPopPacket pop() {
-        return new ClientboundResourcePackPopPacket(Optional.of(PACK_UUID));
+        return new ClientboundResourcePackPopPacket(Optional.of(Kanoho.CONFIG.resourcepackUuid));
     }
 }
