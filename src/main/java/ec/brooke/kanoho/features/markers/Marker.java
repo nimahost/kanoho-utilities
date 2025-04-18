@@ -1,4 +1,4 @@
-package ec.brooke.kanoho.entities.markers;
+package ec.brooke.kanoho.features.markers;
 
 import com.mojang.math.Transformation;
 import net.minecraft.util.Mth;

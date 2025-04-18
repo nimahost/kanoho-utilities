@@ -1,7 +1,7 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.components.EntityComponents;
-import ec.brooke.kanoho.components.ItemComponents;
+import ec.brooke.kanoho.framework.components.EntityComponents;
+import ec.brooke.kanoho.framework.components.ItemComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

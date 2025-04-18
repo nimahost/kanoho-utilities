@@ -1,4 +1,4 @@
-package ec.brooke.kanoho;
+package ec.brooke.kanoho.framework;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;

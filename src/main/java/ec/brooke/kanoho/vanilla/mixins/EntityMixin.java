@@ -1,10 +1,9 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.components.ComponentType;
-import ec.brooke.kanoho.components.EntityComponents;
-import ec.brooke.kanoho.vanilla.IComponentHolder;
+import ec.brooke.kanoho.framework.components.ComponentType;
+import ec.brooke.kanoho.framework.components.EntityComponents;
+import ec.brooke.kanoho.framework.components.IComponentHolder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

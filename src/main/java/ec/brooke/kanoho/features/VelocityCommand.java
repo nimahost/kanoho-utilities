@@ -1,10 +1,11 @@
-package ec.brooke.kanoho.commands;
+package ec.brooke.kanoho.features;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import ec.brooke.kanoho.Kanoho;
+import ec.brooke.kanoho.framework.KanohoCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.Coordinates;

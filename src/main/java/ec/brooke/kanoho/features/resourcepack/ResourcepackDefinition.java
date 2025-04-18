@@ -1,9 +1,8 @@
-package ec.brooke.kanoho.resourcepack;
+package ec.brooke.kanoho.features.resourcepack;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
-import net.minecraft.server.MinecraftServer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;

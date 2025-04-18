@@ -1,4 +1,4 @@
-package ec.brooke.kanoho.components;
+package ec.brooke.kanoho.framework.components;
 
 import com.mojang.serialization.Codec;
 

@@ -1,7 +1,7 @@
-package ec.brooke.kanoho.resourcepack;
+package ec.brooke.kanoho.features.resourcepack;
 
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.components.EntityComponents;
+import ec.brooke.kanoho.framework.components.EntityComponents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;

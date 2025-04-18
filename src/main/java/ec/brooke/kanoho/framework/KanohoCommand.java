@@ -1,4 +1,4 @@
-package ec.brooke.kanoho.commands;
+package ec.brooke.kanoho.framework;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;

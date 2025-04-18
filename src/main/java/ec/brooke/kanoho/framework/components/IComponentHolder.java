@@ -1,6 +1,4 @@
-package ec.brooke.kanoho.vanilla;
-
-import ec.brooke.kanoho.components.ComponentType;
+package ec.brooke.kanoho.framework.components;
 
 import java.util.Optional;
 

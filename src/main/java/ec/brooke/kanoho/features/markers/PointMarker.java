@@ -1,4 +1,4 @@
-package ec.brooke.kanoho.entities.markers;
+package ec.brooke.kanoho.features.markers;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;

@@ -1,4 +1,4 @@
-package ec.brooke.kanoho.commands;
+package ec.brooke.kanoho.features.resourcepack;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -6,7 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.components.EntityComponents;
+import ec.brooke.kanoho.framework.KanohoCommand;
+import ec.brooke.kanoho.framework.components.EntityComponents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,7 +1,7 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.components.ComponentType;
-import ec.brooke.kanoho.vanilla.IComponentHolder;
+import ec.brooke.kanoho.framework.components.ComponentType;
+import ec.brooke.kanoho.framework.components.IComponentHolder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;

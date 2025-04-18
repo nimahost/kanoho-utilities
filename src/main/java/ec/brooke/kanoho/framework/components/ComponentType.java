@@ -1,13 +1,11 @@
-package ec.brooke.kanoho.components;
+package ec.brooke.kanoho.framework.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.vanilla.IComponentHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 import java.util.function.Consumer;

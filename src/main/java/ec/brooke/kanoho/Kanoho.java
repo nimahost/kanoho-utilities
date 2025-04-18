@@ -1,8 +1,9 @@
 package ec.brooke.kanoho;
 
-import ec.brooke.kanoho.commands.ResourcepackCommand;
-import ec.brooke.kanoho.commands.VelocityCommand;
-import ec.brooke.kanoho.resourcepack.ResourcepackLibrary;
+import ec.brooke.kanoho.features.VelocityCommand;
+import ec.brooke.kanoho.features.resourcepack.ResourcepackCommand;
+import ec.brooke.kanoho.features.resourcepack.ResourcepackLibrary;
+import ec.brooke.kanoho.framework.EphemeralityManager;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
