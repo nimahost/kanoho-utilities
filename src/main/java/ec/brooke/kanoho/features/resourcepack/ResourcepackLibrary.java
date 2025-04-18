@@ -23,7 +23,6 @@ import java.util.Set;
 
 /**
  * Represents a library of resource packs players can choose between
- *
  * This class is responsible for generating this library from GitHub
  */
 public class ResourcepackLibrary {
