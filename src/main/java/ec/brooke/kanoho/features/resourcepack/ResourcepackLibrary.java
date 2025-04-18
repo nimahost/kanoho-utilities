@@ -30,6 +30,9 @@ import java.util.Set;
  * This class is responsible for generating this library from GitHub
  */
 public class ResourcepackLibrary {
+    /** Override pack name used to turn off resource packs entirely */
+    public static final String OVERRIDE_NAME = "none";
+
     /** The name of the release asset containing the SHA1s of the options */
     public static final String INDEX_FILENAME = "checksums.txt";
 
@@ -41,16 +44,17 @@ public class ResourcepackLibrary {
     public ResourcepackLibrary() {
         ServerLifecycleEvents.SERVER_STARTING.register(this::reload);
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register((s, c) -> this.reload(s));
-        ServerPlayConnectionEvents.JOIN.register((l, s, m) -> this.push(l.player));
+        ServerPlayConnectionEvents.JOIN.register((l, s, m) -> this.apply(l.player));
     }
 
     /**
      * Applies their selected resource pack to the specified player
      * @param player The player to reload
      */
-    public void push(ServerPlayer player) {
+    public void apply(ServerPlayer player) {
         String name = EntityComponents.RESOURCEPACK.from(player).orElse(Kanoho.CONFIG.resourcepackDefault);
-        if (contains(name)) player.connection.send(get(name).packet());
+
+        if (contains(name)) player.connection.send(get(name).push());
         else {
             // Send error message
             player.sendSystemMessage(ERROR_MESSAGE);
@@ -103,7 +107,7 @@ public class ResourcepackLibrary {
             Kanoho.LOGGER.info("Loaded resource packs {}", names());
 
             // Update player packs
-            for (ServerPlayer player : server.getPlayerList().getPlayers()) push(player);
+            for (ServerPlayer player : server.getPlayerList().getPlayers()) apply(player);
         }).start();
     }
 

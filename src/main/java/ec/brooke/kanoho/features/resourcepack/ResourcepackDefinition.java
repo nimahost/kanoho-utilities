@@ -5,7 +5,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,6 +14,9 @@ import java.util.UUID;
  * @param url The URL to download this resource pack from
  */
 public record ResourcepackDefinition(String hash, String url) {
+    /** The UUID used to specify the packs should be replaced instead of stacked */
+    public static final UUID PACK_UUID = UUID.randomUUID();
+
     /** The prompt shown to players when they are asked to apply a resource pack */
     public static final Component PROMPT;
 
@@ -25,11 +27,11 @@ public record ResourcepackDefinition(String hash, String url) {
     }
 
     /**
-     * @return a resource pack packet to apply this definition.
+     * @return a resource pack packet to apply this pack
      */
-    public ClientboundResourcePackPushPacket packet() {
+    public ClientboundResourcePackPushPacket push() {
         return new ClientboundResourcePackPushPacket(
-                UUID.nameUUIDFromBytes(hash.getBytes(StandardCharsets.UTF_8)),
+                PACK_UUID,
                 url,
                 hash,
                 true,

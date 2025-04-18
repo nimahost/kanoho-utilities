@@ -41,8 +41,8 @@ public class ResourcepackCommand extends KanohoCommand {
         if (name.equals(current)) throw ERROR_ALREADY.create();
         EntityComponents.RESOURCEPACK.to(player, name);
 
-        // Send packet and feedback
-        player.connection.send(Kanoho.resourcepacks.get(name).packet());
+        // Update pack and feedback
+        Kanoho.resourcepacks.apply(player);
         ctx.getSource().sendSuccess(() -> Component.literal("Set resource pack level to ").append(name), true);
         return 1;
     }
