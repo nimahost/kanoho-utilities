@@ -3,6 +3,7 @@ package ec.brooke.kanoho.features.resourcepack;
 import ec.brooke.kanoho.Kanoho;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.ClientboundResourcePackPopPacket;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
 
 import java.util.Optional;
@@ -37,5 +38,12 @@ public record ResourcepackDefinition(String hash, String url) {
                 true,
                 Optional.of(PROMPT)
         );
+    }
+
+    /**
+     * @return a resource pack packet to remove this pack
+     */
+    public static ClientboundResourcePackPopPacket pop() {
+        return new ClientboundResourcePackPopPacket(Optional.of(PACK_UUID));
     }
 }

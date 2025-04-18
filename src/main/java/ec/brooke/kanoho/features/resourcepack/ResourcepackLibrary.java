@@ -54,7 +54,8 @@ public class ResourcepackLibrary {
     public void apply(ServerPlayer player) {
         String name = EntityComponents.RESOURCEPACK.from(player).orElse(Kanoho.CONFIG.resourcepackDefault);
 
-        if (contains(name)) player.connection.send(get(name).push());
+        if (OVERRIDE_NAME.equals(name)) player.connection.send(ResourcepackDefinition.pop());
+        else if (contains(name)) player.connection.send(get(name).push());
         else {
             // Send error message
             player.sendSystemMessage(ERROR_MESSAGE);
@@ -124,7 +125,7 @@ public class ResourcepackLibrary {
      * @return Whether the library contains a resource pack with the specified name
      */
     public boolean contains(String name) {
-        return library.containsKey(name);
+        return library.containsKey(name) || OVERRIDE_NAME.equals(name);
     }
 
     /**
