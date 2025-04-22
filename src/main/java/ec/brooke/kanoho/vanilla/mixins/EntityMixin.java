@@ -30,7 +30,7 @@ public abstract class EntityMixin implements IComponentHolder {
         components = compoundTag.getCompound(ComponentType.NAMESPACE);
     }
 
-    @Inject(method = "tick", at = @At(value = "TAIL"))
+    @Inject(method = "tick", at = @At("TAIL"))
     private void injectStatus(CallbackInfo ci) {
         kanoho$remove(EntityComponents.CONSUMED);
     }

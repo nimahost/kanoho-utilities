@@ -38,7 +38,7 @@ public abstract class ConsumableMixin {
     protected abstract float getConsumeSeconds();
 
     // If the consume time is zero, set to non-existent namespace to prevent
-    @Inject(method = "sound", cancellable = true, at = @At(value = "RETURN"))
+    @Inject(method = "sound", cancellable = true, at = @At("RETURN"))
     private void cancelConsume(CallbackInfoReturnable<Holder<SoundEvent>> cir) {
         if (getConsumeSeconds() != 0) return;
         ResourceLocation rl = ResourceLocation.fromNamespaceAndPath("", "");

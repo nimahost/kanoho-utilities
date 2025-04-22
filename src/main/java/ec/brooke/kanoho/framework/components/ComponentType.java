@@ -9,6 +9,8 @@ import net.minecraft.nbt.Tag;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Definition type for Kanoho's custom component system
@@ -82,6 +84,36 @@ public class ComponentType<T> {
             tag.put(location, component);
         } else if (holder instanceof IComponentHolder h) h.kanoho$set(this, value);
         else Kanoho.LOGGER.warn("Tried set {} in non-{} class {}", this.location, IComponentHolder.class.getName(), holder.getClass().getName());
+    }
+
+    /**
+     * Update this component in the provided {@link IComponentHolder} using a function
+     * @param holder The holder to update the component on
+     * @param fallback A supplier to provide the initial value if the component is not found
+     * @param func Function returning the replacement component
+     */
+    public void update(Object holder, Supplier<T> fallback, Function<T, T> func) {
+        T component = from(holder).orElseGet(fallback);
+        to(holder, func.apply(component));
+    }
+
+    /**
+     * Update this component in the provided {@link IComponentHolder} using a function
+     * @param holder The holder to update the component on
+     * @param fallback The initial value to be used if the component is not found
+     * @param func Function returning the replacement component
+     */
+    public void update(Object holder, T fallback, Function<T, T> func) {
+        update(holder, () -> fallback, func);
+    }
+
+    /**
+     * Update this component if it is found in the provided {@link IComponentHolder} using a function
+     * @param holder The holder to update the component on
+     * @param func Function returning the replacement component
+     */
+    public void updateIfExists(Object holder, Function<T, T> func) {
+        from(holder).ifPresent(component -> to(holder, func.apply(component)));
     }
 
     /**

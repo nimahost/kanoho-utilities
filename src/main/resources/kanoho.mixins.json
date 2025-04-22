@@ -6,7 +6,8 @@
   "mixins": [
     "ConsumableMixin",
     "EntityMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "ServerItemCooldownsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
