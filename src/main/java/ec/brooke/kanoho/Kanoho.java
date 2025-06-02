@@ -1,5 +1,6 @@
 package ec.brooke.kanoho;
 
+import ec.brooke.kanoho.features.CooldownCommand;
 import ec.brooke.kanoho.features.VelocityCommand;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackCommand;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackLibrary;
@@ -20,5 +21,6 @@ public class Kanoho implements ModInitializer {
     public void onInitialize() {
         new VelocityCommand().register();
         new ResourcepackCommand().register();
+        new CooldownCommand().register();
     }
 }
