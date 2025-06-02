@@ -29,7 +29,7 @@ public class VelocityCommand extends KanohoCommand {
 
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
-        return literal("velocity").requires(commandSourceStack -> commandSourceStack.hasPermission(2))
+        return literal("velocity").requires(ctx -> ctx.hasPermission(2))
                 .then(literal("set")
                         .then(argument("targets", EntityArgument.entities())
                                 .then(argument("velocity", Vec3Argument.vec3())
