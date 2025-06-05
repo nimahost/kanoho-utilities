@@ -2,7 +2,6 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import mcfunction from "syntax-mcfunction/mcfunction.tmLanguage.json?raw";
-import customjs from "./src/custom.js?raw";
 
 // https://astro.build/config
 export default defineConfig({
@@ -44,12 +43,6 @@ export default defineConfig({
 					langAlias: { mcfunction: "Syntax Mcfunction" },
 				},
 			},
-			head: [
-				{
-					tag: "script",
-					content: customjs,
-				},
-			],
 		}),
 	],
 });
