@@ -78,6 +78,10 @@ jar {
     }
 }
 
+javadoc {
+    destinationDir = file("./docs/public/javadoc")
+}
+
 remapJar {
     // wait until the shadowJar is done
     dependsOn(shadowJar)

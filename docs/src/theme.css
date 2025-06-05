@@ -1,0 +1,36 @@
+/* Dark mode colors. */
+:root {
+	--sl-color-accent-low: #562371;
+	--sl-color-accent: #ac81f1;
+	--sl-color-accent-high: #ac81f1;
+}
+
+/* Light mode colors. */
+:root[data-theme="light"] {
+	--sl-color-accent-low: #d9cbf2;
+	--sl-color-accent: #ac81f1;
+	--sl-color-accent-high: #ac81f1;
+}
+
+/* Home page background gradients. */
+[data-has-hero] .page {
+	background: linear-gradient(215deg, #56237180, transparent 40%),
+		radial-gradient(#56237180, transparent 40%) no-repeat -60vw -40vh / 105vw 200vh;
+}
+
+/* Header background */
+[data-has-hero] header {
+	transition: background-color 250ms ease-in-out;
+	-webkit-backdrop-filter: blur(16px);
+	backdrop-filter: blur(16px);
+}
+
+[data-has-hero] header:not(.scrolled) {
+	border-bottom: 1px solid transparent;
+	background-color: transparent;
+}
+
+/* Increase border radius for cards */
+.card {
+	border-radius: 0.25rem;
+}
