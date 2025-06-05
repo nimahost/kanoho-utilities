@@ -34,9 +34,7 @@ export default defineConfig({
 			editLink: {
 				baseUrl: "https://github.com/nimahost/kanoho-utilities/edit/main/docs/",
 			},
-			logo: {
-				src: "./public/favicon.svg",
-			},
+			favicon: "./public/favicon.ico",
 			expressiveCode: {
 				styleOverrides: { borderRadius: "0.25rem" },
 				shiki: {
