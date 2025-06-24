@@ -10,9 +10,4 @@ declare global {
 	}
 }
 
-declare module "*.json?theme" {
-	const src: monaco.editor.IStandaloneThemeData;
-	export default src;
-}
-
 export {};
