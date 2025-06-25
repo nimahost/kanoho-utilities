@@ -11,6 +11,7 @@ export const editor: Attachment<HTMLElement> = (element) => {
 		editor = monaco.editor.create(element, {
 			theme: "catppuccin-macchiato",
 			language: "mcfunction",
+			automaticLayout: true,
 		});
 	});
 

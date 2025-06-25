@@ -7,9 +7,9 @@
 	<div class="container" {@attach editor}></div>
 </div>
 
-<style>
+<style lang="scss">
 	.container {
 		width: 100%;
-		height: 600px;
+		height: 100vh;
 	}
 </style>
