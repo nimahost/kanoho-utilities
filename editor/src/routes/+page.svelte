@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Explorer from "$lib/Explorer.svelte";
+	import Explorer from "$lib/explorer/Explorer.svelte";
 	import Editor from "$lib/monaco";
 	import "greset";
 </script>
