@@ -14,8 +14,6 @@ self.MonacoEnvironment = {
 	getWorker: () => new EditorWorker(),
 };
 
-await loadWASM(onigasm).catch(() => null);
-
 monaco.languages.register({ id: SCOPE_MCFUNCTION });
 monaco.languages.setLanguageConfiguration(SCOPE_MCFUNCTION, configuration);
 
@@ -26,7 +24,9 @@ const registry = new Registry({
 	}),
 });
 
-await wireTmGrammars(monaco, registry, new Map([[SCOPE_MCFUNCTION, grammar.scopeName]]));
+loadWASM(onigasm)
+	.catch(() => null)
+	.then(() => wireTmGrammars(monaco, registry, new Map([[SCOPE_MCFUNCTION, grammar.scopeName]])));
 
 monaco.editor.defineTheme("catppuccin-macchiato", theme);
 

@@ -1,6 +1,6 @@
 execute at @a[
     nbt= {
-        FallFlying:1b,
+        FallFlying: 1b,
         kanoho: {
             consumed: {
                 components: {
