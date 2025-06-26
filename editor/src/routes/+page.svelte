@@ -1,15 +1,24 @@
 <script lang="ts">
-	import { editor } from "$lib/monaco";
+	import Explorer from "$lib/Explorer.svelte";
+	import Editor from "$lib/monaco";
 	import "greset";
 </script>
 
-<div>
-	<div class="container" {@attach editor}></div>
-</div>
+<main>
+	<Explorer />
+	<div class="editor">
+		<Editor />
+	</div>
+</main>
 
 <style lang="scss">
-	.container {
-		width: 100%;
+	main {
 		height: 100vh;
+		display: flex;
+	}
+
+	.editor {
+		flex-grow: 1;
+		overflow: hidden;
 	}
 </style>
