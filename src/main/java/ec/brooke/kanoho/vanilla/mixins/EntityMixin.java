@@ -1,7 +1,7 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
+import ec.brooke.kanoho.features.components.EntityComponents;
 import ec.brooke.kanoho.framework.components.ComponentType;
-import ec.brooke.kanoho.framework.components.EntityComponents;
 import ec.brooke.kanoho.framework.components.IComponentHolder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +32,7 @@ public abstract class EntityMixin implements IComponentHolder {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void injectStatus(CallbackInfo ci) {
-        kanoho$remove(EntityComponents.CONSUMED);
+        kanoho$remove(EntityComponents.USED);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.framework.components.EntityComponents;
+import ec.brooke.kanoho.features.components.EntityComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ServerItemCooldowns;

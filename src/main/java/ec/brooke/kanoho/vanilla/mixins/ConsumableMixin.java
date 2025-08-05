@@ -1,7 +1,7 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.framework.components.EntityComponents;
-import ec.brooke.kanoho.framework.components.ItemComponents;
+import ec.brooke.kanoho.features.components.EntityComponents;
+import ec.brooke.kanoho.features.components.ItemComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +23,11 @@ public abstract class ConsumableMixin {
     @Inject(method = "onConsume", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;consume(ILnet/minecraft/world/entity/LivingEntity;)V"))
     private void cancelConsume(Level level, LivingEntity entity, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         if (entity instanceof ServerPlayer player) {
-            EntityComponents.CONSUMED.to(player, stack);
+            EntityComponents.USED.to(player, stack);
+
+            ItemComponents.ON_USED.from(stack).flatMap(location -> player.server.getFunctions().get(location)).ifPresent(function -> {
+                player.server.getFunctions().execute(function, player.createCommandSourceStack().withSuppressedOutput().withPermission(2));
+            });
 
             ItemComponents.CONSUMED.from(stack).ifPresent(consumed -> {
                 if (consumed || player.hasInfiniteMaterials()) return;

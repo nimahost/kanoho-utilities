@@ -1,6 +1,6 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.framework.components.EntityComponents;
+import ec.brooke.kanoho.features.components.EntityComponents;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
