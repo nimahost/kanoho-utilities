@@ -28,8 +28,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    implementation 'org.kohsuke:github-api:2.0-rc.2'
-    shadow 'org.kohsuke:github-api:2.0-rc.2'
+    implementation "org.kohsuke:github-api:${project.github_api_version}"
+    shadow "org.kohsuke:github-api:${project.github_api_version}"
 }
 
 processResources {
