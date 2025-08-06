@@ -1,6 +1,6 @@
 package ec.brooke.kanoho.vanilla.mixins;
 
-import ec.brooke.kanoho.features.components.EntityComponents;
+import ec.brooke.kanoho.Kanoho;
 import ec.brooke.kanoho.features.components.ItemComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -21,13 +21,9 @@ public abstract class ConsumableMixin {
 
     // Handle updating player status and preventing item consumption if component set
     @Inject(method = "onConsume", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;consume(ILnet/minecraft/world/entity/LivingEntity;)V"))
-    private void cancelConsume(Level level, LivingEntity entity, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+    private void onConsume(Level level, LivingEntity entity, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         if (entity instanceof ServerPlayer player) {
-            EntityComponents.USED.to(player, stack);
-
-            ItemComponents.ON_USED.from(stack).flatMap(location -> player.server.getFunctions().get(location)).ifPresent(function -> {
-                player.server.getFunctions().execute(function, player.createCommandSourceStack().withSuppressedOutput().withPermission(2));
-            });
+            ItemComponents.ON_USED.from(stack).ifPresent(location -> Kanoho.events.invoke(player, location));
 
             ItemComponents.CONSUMED.from(stack).ifPresent(consumed -> {
                 if (consumed || player.hasInfiniteMaterials()) return;
@@ -43,7 +39,7 @@ public abstract class ConsumableMixin {
 
     // If the consume time is zero, set to non-existent namespace to prevent
     @Inject(method = "sound", cancellable = true, at = @At("RETURN"))
-    private void cancelConsume(CallbackInfoReturnable<Holder<SoundEvent>> cir) {
+    private void preventSound(CallbackInfoReturnable<Holder<SoundEvent>> cir) {
         if (getConsumeSeconds() != 0) return;
         ResourceLocation rl = ResourceLocation.fromNamespaceAndPath("", "");
         cir.setReturnValue(new Holder.Direct<>(SoundEvent.createFixedRangeEvent(rl, 0)));

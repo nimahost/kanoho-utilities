@@ -15,10 +15,14 @@ public class Kanoho implements ModInitializer {
     public static final KanohoConfig CONFIG = KanohoConfig.load();
 
     public static final ResourcepackLibrary resourcepacks = new ResourcepackLibrary();
+    public static final FunctionEvents events = new FunctionEvents();
     public static EphemeralityManager ephemerality;
 
     @Override
     public void onInitialize() {
+        events.setup();
+
+        // Register commands
         new VelocityCommand().register();
         new ResourcepackCommand().register();
         new CooldownCommand().register();
