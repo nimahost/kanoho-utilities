@@ -6,14 +6,14 @@ description: Gude on how to create an item that performs an action on right-clic
 import { Steps } from '@astrojs/starlight/components';
 
 In this guide, you will learn how to create a usable item that performs an action when right-clicked.
-This example will create a party popper item that, when used, will spawn confetti at the player's location. 🎉🎉🎉
+Throughout this guide, you will create a party popper item that, when used, will spawn confetti at the player's location. 🎉🎉🎉
 
 ### Adding Assets
 
 If you want to completely customise the look and feel of your item, you can add assets to kanoho's resource pack. This step can be skipped if you are happy using a vanilla item.
 
 :::tip
-This guide will not go into detail on how to create assets, but for creating block models, we recommend [Blockbench](https://www.blockbench.net/) and [Audacity](https://www.audacityteam.org/) for sound effects.
+This guide will not go into detail on how to create assets, but we recommend using [Blockbench](https://www.blockbench.net/) for creating models and [Audacity](https://www.audacityteam.org/) for sound effects.
 :::
 
 Here is the party popper model we created for this example:
@@ -27,16 +27,16 @@ Once you have created your model and sound, you can add them to the resourcepack
 2. Add your model to the `pack/assets/kanoho/models/item` directory, and any textures to the `pack/assets/kanoho/textures/item` directory.
     Make sure to follow our [naming conventions](../getting_started#naming-conventions).
 3. Open the `pack/assets/minecraft/models/item/clay_ball.json` file and add an override for your model.
-    For more information see check out the [Minecraft Wiki](https://minecraft.wiki/w/Items_model_definition).
+    For more information, check out the [Minecraft Wiki model definition page](https://minecraft.wiki/w/Items_model_definition).
 4. Add your sound files to the `pack/assets/kanoho/sounds/item` directory, and configure them in the `pack/assets/kanoho/sounds.json` file.
-    For more information on the configuration options, check out the [Minecraft Wiki](https://minecraft.wiki/w/Sounds.json).
+    For more information on how you can configure your sounds, check out the [Minecraft Wiki sounds.json page](https://minecraft.wiki/w/Sounds.json).
 5. Finally, create a [pull request](https://github.com/nimahost/kanoho-resource-pack/compare) to merge your changes into the main resource pack.
+    Once merged, your assets will be available to all users of kanoho!
 </Steps>
 
 ### Creating the Item
 
-Now that you have your assets ready, you can create the item itself. This involves adding the right [data components](https://minecraft.wiki/w/Data_component_format) 
-and [Kanoho components](../../reference/item_components) to your give command.
+Now that you have your assets ready, you can create the item itself. This involves adding the right [data components](https://minecraft.wiki/w/Data_component_format) to your give command to achieve the functionality you desire.
 
 You start with a regular give command, but add square brackets to the end:
 
@@ -55,7 +55,7 @@ Inside of these square brackets, you can add the components that define your ite
 
 2. Add a cooldown to the item by adding the `minecraft:use_cooldown` component.
     ```mcfunction
-    minecraft:use_cooldown={seconds:1,cooldown_group:"doc_party_popper"},
+    minecraft:use_cooldown={seconds:1,cooldown_group:"kanoho:doc_party_popper"},
     ```
     `seconds` is the duration of the cooldown in seconds, and `cooldown_group` is a unique identifier for the cooldown. Make sure to follow our [naming conventions](../getting_started#naming-conventions) for the cooldown group.
 
@@ -76,18 +76,20 @@ The final give command will like this:
 ```mcfunction
 give @p minecraft:clay_ball[
     minecraft:consumable={consume_seconds:0,has_consume_particles:false},
-    minecraft:use_cooldown={seconds:1,cooldown_group:"doc_party_popper"},
+    minecraft:use_cooldown={seconds:1,cooldown_group:"kanoho:doc_party_popper"},
     minecraft:custom_model_data={strings:["doc_party_popper"]},
     minecraft:custom_name='{"color":"yellow","italic":false,"text":"Party Popper"}'
 ]
 ```
 
+For help creating items, we recommend using [mcstacker](https://mcstacker.net/), which is a web-based command generator that can help you create complex commands with ease.
+
 ### Adding the Action
 
 Now that you have created the item, you can add the action that it performs when used.
 
-To begin with, you need to create a function that will be called when the item is used.
-This function will spawn the confetti at the player's location and play the sound you added earlier.
+To begin with, you need to create the function that will be called when the item is used.
+This function will spawn confetti at the player's location and play the sound you added earlier.
 
 Open mcfunction-server using the `/editor` command and create a new function. Make sure to follow our [naming conventions](../getting_started#naming-conventions) for the function name, such as `doc/party_popper/used`.
 
@@ -103,7 +105,7 @@ Now you can add commands to the function:
     ```
 </Steps>
 
-And finally, you need to tell your item to call this function when used. To do this, add the Kanoho `on_used` component to your item:
+And finally, you need to tell your item to call this function when used. To do this, add the [Kanoho `on_used` component](../../reference/item_components) to your item:
 
 ```mcfunction
 minecraft:custom_data={kanoho:{on_used:"editor:doc/party_popper/used"}}
@@ -118,7 +120,7 @@ Your party popper is now ready to use! You can give it to yourself using the com
 ```mcfunction
 give @p minecraft:clay_ball[
     minecraft:consumable={consume_seconds:0,has_consume_particles:false},
-    minecraft:use_cooldown={seconds:1,cooldown_group:"doc_party_popper"},
+    minecraft:use_cooldown={seconds:1,cooldown_group:"kanoho:doc_party_popper"},
     minecraft:custom_model_data={strings:["doc_party_popper"]},
     minecraft:custom_name='{"color":"yellow","italic":false,"text":"Party Popper"}',
     minecraft:custom_data={kanoho:{on_used:"editor:doc/party_popper/used"}}
