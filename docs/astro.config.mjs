@@ -5,6 +5,9 @@ import mcfunction from "syntax-mcfunction/mcfunction.tmLanguage.json?raw";
 
 // https://astro.build/config
 export default defineConfig({
+	output: "static",
+	trailingSlash: "never",
+	base: "/kanoho-utilities/",
 	integrations: [
 		starlight({
 			title: "Kanoho Utilities",
