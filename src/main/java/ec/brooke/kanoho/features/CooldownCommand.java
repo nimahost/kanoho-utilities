@@ -19,14 +19,15 @@ public class CooldownCommand extends KanohoCommand {
 
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
-        return literal("cooldown").then(argument("targets", EntityArgument.players())
-                .then(literal("set")
-                        .then(argument("group", ResourceLocationArgument.id())
-                                .then(argument("time", IntegerArgumentType.integer(0))
-                                        .executes(ctx -> modify(ctx, IntegerArgumentType.getInteger(ctx, "time"))))))
-                .then(literal("remove")
-                        .then(argument("group", ResourceLocationArgument.id())
-                                .executes(ctx -> modify(ctx, 0))))
+        return literal("cooldown").requires(ctx -> ctx.hasPermission(2))
+                .then(argument("targets", EntityArgument.players())
+                    .then(literal("set")
+                            .then(argument("group", ResourceLocationArgument.id())
+                                    .then(argument("time", IntegerArgumentType.integer(0))
+                                            .executes(ctx -> modify(ctx, IntegerArgumentType.getInteger(ctx, "time"))))))
+                    .then(literal("remove")
+                            .then(argument("group", ResourceLocationArgument.id())
+                                    .executes(ctx -> modify(ctx, 0))))
         );
     }
 
