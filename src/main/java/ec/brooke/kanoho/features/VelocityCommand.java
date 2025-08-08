@@ -30,14 +30,14 @@ public class VelocityCommand extends KanohoCommand {
     @Override
     protected LiteralArgumentBuilder<CommandSourceStack> define() {
         return literal("velocity").requires(ctx -> ctx.hasPermission(2))
+            .then(argument("targets", EntityArgument.entities())
                 .then(literal("set")
-                        .then(argument("targets", EntityArgument.entities())
-                                .then(argument("velocity", Vec3Argument.vec3())
-                                        .executes(this::setVelocity))))
+                    .then(argument("velocity", Vec3Argument.vec3())
+                        .executes(this::setVelocity)))
                 .then(literal("add")
-                        .then(argument("targets", EntityArgument.entities())
-                                .then(argument("velocity", Vec3Argument.vec3())
-                                        .executes(this::addVelocity))));
+                    .then(argument("velocity", Vec3Argument.vec3())
+                        .executes(this::addVelocity)))
+            );
     }
 
     /**
