@@ -21,13 +21,16 @@ export default defineConfig({
 				{
 					label: "Guides",
 					items: [
-						// Each item here is one entry in the navigation menu.
+						{ label: "Getting Started", slug: "guides/getting_started" },
 						{ label: "Creating a Usable Item", slug: "guides/usable_item" },
 					],
 				},
 				{
 					label: "Reference",
-					items: [],
+					items: [
+						{ label: "Item Components", slug: "reference/item_components" },
+						{ label: "Entity Components", slug: "reference/entity_components" },
+					],
 				},
 			],
 			editLink: {

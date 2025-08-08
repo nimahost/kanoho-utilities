@@ -1,0 +1,18 @@
+---
+title: Entity Components
+description: Explore the entity components offered by Kanoho Utilities.
+---
+
+Inspired by vanilla's [Data Components](https://minecraft.wiki/w/Data_component_format),
+Kanoho's entity components provide powerful new ways of obtaining data about entities.
+
+Kanoho's components are stored as [NBT tags](https://minecraft.wiki/w/NBT_format), and are always reside inside a `kanoho` compound tag.
+For example, to give yourself an everlasting steak, you use the following command:
+
+---
+
+| Location       | Type         | Description                                                                                                                                                                                           |
+| -------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cooldowns`    | string array | A list of [resource location](https://minecraft.wiki/w/Resource_location) representing the current [use cooldowns](https://minecraft.wiki/w/Data_component_format#use_cooldown) affecting the player. |
+| `used`         | item         | When present, is set to the NBT of the item which was used this tick.                                                                                                                                 |
+| `resourcepack` | string       | The ID of the server resource pack is currently using, [read more](../resourcepack). |

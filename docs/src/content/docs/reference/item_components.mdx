@@ -1,0 +1,28 @@
+---
+title: Item Components
+description: Explore the item components offered by Kanoho Utilities.
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Inspired by vanilla's [Data Components](https://minecraft.wiki/w/Data_component_format),
+Kanoho's item components provide a powerful way to add custom functionality to items.
+
+Kanoho's components are stored as [NBT tags](https://minecraft.wiki/w/NBT_format), and are always reside inside a `kanoho` compound tag.
+For example, to give yourself an everlasting steak, you use the following command:
+
+```mcfunction "kanoho:{consumed: false}"
+give @p minecraft:cooked_beef[minecraft:custom_data={kanoho:{consumed: false}}] 1
+```
+
+---
+
+<Aside>
+	Item components are currently located within the `minecraft:custom_data` data component. However, this may change in
+	the future.
+</Aside>
+
+| Location   | Type    | Description                                                                                                           |
+| ---------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| `consumed` | boolean | If false then the item will not be removed after being used.                                                          |
+| `on_used`  | string  | A [resource location](https://minecraft.wiki/w/Resource_location) to a function to call after the item has been used. |

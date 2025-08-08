@@ -12,6 +12,10 @@
 	--sl-color-accent-high: #ac81f1;
 }
 
+* {
+	overflow-wrap: normal !important;
+}
+
 /* Home page background gradients. */
 [data-has-hero] .page {
 	background: linear-gradient(215deg, #56237180, transparent 40%),
