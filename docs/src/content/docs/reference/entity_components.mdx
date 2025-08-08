@@ -7,7 +7,11 @@ Inspired by vanilla's [Data Components](https://minecraft.wiki/w/Data_component_
 Kanoho's entity components provide powerful new ways of obtaining data about entities.
 
 Kanoho's components are stored as [NBT tags](https://minecraft.wiki/w/NBT_format), and are always reside inside a `kanoho` compound tag.
-For example, to give yourself an everlasting steak, you use the following command:
+For example, check if enderpearls are on cooldown for the player you could use the following command:
+
+```mcfunction
+execute if data entity @s {kanoho:{cooldowns:["minecraft:ender_pearl"]}} # etc...
+```
 
 ---
 
