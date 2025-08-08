@@ -25,7 +25,7 @@ Once you have created your model and sound, you can add them to the resourcepack
 <Steps>
 1. Create a fork of the [kanoho resource pack](https://github.com/nimahost/kanoho-resource-pack) and clone it to your local machine.
 2. Add your model to the `pack/assets/kanoho/models/item` directory, and any textures to the `pack/assets/kanoho/textures/item` directory.
-    Make sure to follow our [naming conventions](../getting_started#naming-conventions).
+    Make sure to follow our [naming conventions](/guides/getting_started#naming-conventions).
 3. Open the `pack/assets/minecraft/models/item/clay_ball.json` file and add an override for your model.
     For more information, check out the [Minecraft Wiki model definition page](https://minecraft.wiki/w/Items_model_definition).
 4. Add your sound files to the `pack/assets/kanoho/sounds/item` directory, and configure them in the `pack/assets/kanoho/sounds.json` file.
@@ -57,7 +57,7 @@ Inside of these square brackets, you can add the components that define your ite
     ```mcfunction
     minecraft:use_cooldown={seconds:1,cooldown_group:"kanoho:doc_party_popper"},
     ```
-    `seconds` is the duration of the cooldown in seconds, and `cooldown_group` is a unique identifier for the cooldown. Make sure to follow our [naming conventions](../getting_started#naming-conventions) for the cooldown group.
+    `seconds` is the duration of the cooldown in seconds, and `cooldown_group` is a unique identifier for the cooldown. Make sure to follow our [naming conventions](/guides/getting_started#naming-conventions) for the cooldown group.
 
 3. Add the `minecraft:custom_model_data` component to use the model you created earlier.
     ```mcfunction
@@ -91,7 +91,7 @@ Now that you have created the item, you can add the action that it performs when
 To begin with, you need to create the function that will be called when the item is used.
 This function will spawn confetti at the player's location and play the sound you added earlier.
 
-Open mcfunction-server using the `/editor` command and create a new function. Make sure to follow our [naming conventions](../getting_started#naming-conventions) for the function name, such as `doc/party_popper/used`.
+Open mcfunction-server using the `/editor` command and create a new function. Make sure to follow our [naming conventions](/guides/getting_started#naming-conventions) for the function name, such as `doc/party_popper/used`.
 
 Now you can add commands to the function:
 <Steps>
@@ -105,7 +105,7 @@ Now you can add commands to the function:
     ```
 </Steps>
 
-And finally, you need to tell your item to call this function when used. To do this, add the [Kanoho `on_used` component](../../reference/item_components) to your item:
+And finally, you need to tell your item to call this function when used. To do this, add the [Kanoho `on_used` component](/reference/item_components) to your item:
 
 ```mcfunction
 minecraft:custom_data={kanoho:{on_used:"editor:doc/party_popper/used"}}
