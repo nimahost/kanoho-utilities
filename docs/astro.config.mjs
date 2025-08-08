@@ -13,6 +13,7 @@ export default defineConfig({
 			title: "Kanoho Utilities",
 			description: "Documentation for Kanoho custom commands and utilities.",
 			customCss: ["./src/theme.css"],
+			head: [{ tag: "link", rel: "icon", href: "/kanoho-utilities/favicon.ico" }],
 			social: [
 				{
 					icon: "github",
