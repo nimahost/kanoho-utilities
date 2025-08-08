@@ -28,6 +28,13 @@ export default defineConfig({
 				{
 					label: "Reference",
 					items: [
+						{
+							label: "Commands",
+							items: [
+								{ label: "Velocity Command", slug: "reference/commands/velocity" },
+								{ label: "Cooldown Command", slug: "reference/commands/cooldown" },
+							],
+						},
 						{ label: "Item Components", slug: "reference/item_components" },
 						{ label: "Entity Components", slug: "reference/entity_components" },
 					],

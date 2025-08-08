@@ -1,0 +1,19 @@
+---
+title: Cooldown Command
+description: Learn how Kanoho's cooldown command works.
+---
+
+The cooldown command allows you to manage a player's [use cooldowns](https://minecraft.wiki/w/Data_component_format#use_cooldown).
+
+### Usage
+
+```plaintext
+cooldown <targets> set <group> <time>
+cooldown <targets> remove <group>
+```
+
+| Argument  | Type                                                              | Description                                                |
+| --------- | ----------------------------------------------------------------- | ---------------------------------------------------------- |
+| `targets` | [target selector](https://minecraft.wiki/w/Target_selectors)      | The players to modify the cooldown of.                     |
+| `group`   | [resource identifier](https://minecraft.wiki/w/Resource_location) | The identifier of the cooldown group to modify.            |
+| `time`    | integer                                                           | The time in ticks until the item is able to be used again. |

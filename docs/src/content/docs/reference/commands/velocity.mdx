@@ -1,0 +1,38 @@
+---
+title: Velocity Command
+description: Learn how Kanoho's velocity command works.
+---
+
+The velocity command allows you to modify the velocity of players. This is already possible for non-player entities in vanilla, but the velocity command allows more flexibility regarding the direction and magnitude of the velocity applied.
+
+### Usage
+
+```plaintext
+velocity (set|add) <targets> <velocity>
+```
+
+| Argument   | Type                                                         | Description                             |
+| ---------- | ------------------------------------------------------------ | --------------------------------------- |
+| `targets`  | [target selector](https://minecraft.wiki/w/Target_selectors) | The entities to modify the velocity of. |
+| `velocity` | [vector 3](https://minecraft.wiki/w/Argument_types#vec3)     | The velocity to set/add to the entity.  |
+
+### How Velocity is Calculated
+
+The `velocity` argument supports absolute values as well as [tilde and caret notations](https://minecraft.wiki/w/Coordinates#Commands).
+However, they will be calculated as a **multiplier** on the the **executor's** current velocity, not the command's position.
+
+For example, using tilde notation you could set `Player1`'s velocity to be the same as `Player2`'s, with the following command:
+
+```mcfunction
+execute as Player1 run velocity set Player2 ~1 ~1 ~1
+```
+
+:::note
+As tilde notation is a **multiplier**, using `~ ~ ~` without any values will set their velocity to `0`.
+:::
+
+Caret notation can be used to appy velocity in the direction the executor is currently looking, for example:
+
+```mcfunction
+velocity add @s ^ ^ ^1
+```
