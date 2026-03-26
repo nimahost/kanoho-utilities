@@ -37,7 +37,10 @@ public class WrenchHandler {
             WrenchState state = entry.getValue();
             Player player = entry.getKey();
 
-            if (player.isRemoved() || state.prop.isRemoved()) return true;
+            if (player.isRemoved() || state.prop.isRemoved()) {
+                state.gizmos.forEach(IWrenchGizmo::remove);
+                return true;
+            };
 
             if (!WRENCH.from(player.getMainHandItem()).orElse(false)) end(state);
             else if (!state.dragging) state.selected = state.gizmos.stream().filter(IWrenchGizmo::isHovered).findFirst().orElse(null);
