@@ -14,23 +14,25 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo {
+    private static final double SNAP = 0.25;
     private static final double CLAMP = 16;
 
     private final Display.ItemDisplay prop;
     private final Direction.Axis axis;
-    private final boolean plane;
+    private final boolean inverted;
     private final Player player;
 
     private Vec3 initialPropPos;
     private Vec3 clickOffset;
 
-    public WrenchMoveGizmo(Player player, ItemDisplay prop, Direction.Axis axis, boolean plane) {
+    public WrenchMoveGizmo(Player player, ItemDisplay prop, Direction.Axis axis, boolean inverted) {
         super(EntityType.ITEM_DISPLAY, prop.level());
+        this.inverted = inverted;
         this.player = player;
-        this.plane = plane;
         this.prop = prop;
         this.axis = axis;
 
@@ -46,7 +48,7 @@ public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo
                 DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(
                 List.of(),
                 List.of(),
-                List.of("gizmo_move" + (plane ? "_plane" : "")),
+                List.of("gizmo_move" + (inverted ? "_plane" : "")),
                 List.of(getColor())
         )).build());
         setItemStack(stack);
@@ -63,7 +65,7 @@ public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo
     @Override
     public void tick() {
         Vec3 position;
-        if (plane) position = new Vec3(1,1,1).subtract(axis.getPositive().getUnitVec3()).scale(0.75f);
+        if (inverted) position = new Vec3(1,1,1).subtract(axis.getPositive().getUnitVec3()).scale(0.75f);
         else position = axis.getPositive().getUnitVec3();
 
         Vec3 player = this.player.getEyePosition().subtract(this.prop.position());
@@ -80,7 +82,7 @@ public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo
 
         Vec3 toTarget = this.position().subtract(eyePos);
 
-        if (Math.abs(axis.getPositive().getUnitVec3().normalize().dot(lookVec)) > 0.5f != plane) return false;
+        if (Math.abs(axis.getPositive().getUnitVec3().normalize().dot(lookVec)) > 0.5f != inverted) return false;
 
         // Project toTarget onto the look ray to find the closest point
         double t = toTarget.dot(lookVec);
@@ -107,8 +109,15 @@ public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo
 
     @Override
     public void drag() {
-        Vec3 offset = calculate();
-        this.prop.setPos(initialPropPos.add(offset).subtract(clickOffset));
+        Vec3 pos = initialPropPos.add(calculate()).subtract(clickOffset);
+
+        if (!this.player.isShiftKeyDown()) {
+            EnumSet<Direction.Axis> axes = EnumSet.of(this.axis);
+            if (inverted) axes = EnumSet.complementOf(axes);
+            pos = pos.scale(1 / SNAP).align(axes).scale(SNAP);
+        }
+
+        this.prop.setPos(pos);
     }
 
     @Override
@@ -126,7 +135,7 @@ public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo
         Vec3 axis = this.axis.getPositive().getUnitVec3();
 
         Vec3 normal = axis;
-        if (!plane) {
+        if (!inverted) {
             Vec3 axisVec = this.axis.getPositive().getUnitVec3();
             normal = axisVec.cross(relativePos).cross(axisVec).normalize();
         }
@@ -140,7 +149,7 @@ public class WrenchMoveGizmo extends Display.ItemDisplay implements IWrenchGizmo
 
         Vec3 offset = clamp(direction.scale(scale)).add(relativePos);
 
-        if (!plane) offset = axis.scale(axis.dot(offset));
+        if (!inverted) offset = axis.scale(axis.dot(offset));
         return offset;
     }
 
