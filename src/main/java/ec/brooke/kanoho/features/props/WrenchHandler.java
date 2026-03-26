@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
+import static ec.brooke.kanoho.features.components.ItemComponents.PROP;
+
 public class WrenchHandler {
     private static final ComponentType<Boolean> WRENCH = new ComponentType<>("wrench", Codec.BOOL);
     private static final double FIND_RADIUS = 0.75;
@@ -40,7 +42,7 @@ public class WrenchHandler {
             if (player.isRemoved() || state.prop.isRemoved()) {
                 state.gizmos.forEach(IWrenchGizmo::remove);
                 return true;
-            };
+            }
 
             if (!WRENCH.from(player.getMainHandItem()).orElse(false)) end(state);
             else if (!state.dragging) state.selected = state.gizmos.stream().filter(IWrenchGizmo::isHovered).findFirst().orElse(null);
@@ -96,7 +98,7 @@ public class WrenchHandler {
         AABB searchBox = AABB.ofSize(eyePos, FIND_DISTANCE * 2, FIND_DISTANCE * 2, FIND_DISTANCE * 2);
 
         List<Display.ItemDisplay> candidates = world.getEntitiesOfClass(Display.ItemDisplay.class, searchBox,
-                e -> e.getTags().contains("prop")
+                e -> PROP.from(e.getItemStack()).orElse(false)
         );
 
         Display.ItemDisplay closest = null;
