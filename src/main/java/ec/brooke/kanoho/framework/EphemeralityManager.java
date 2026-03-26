@@ -16,7 +16,10 @@ import java.util.List;
 public class EphemeralityManager {
     List<EphemeralEntity> entities = new ArrayList<>();
 
-    public EphemeralityManager() {
+    /**
+     * Registers the manager's event handlers.
+     */
+    public void register() {
         ServerTickEvents.START_SERVER_TICK.register(this::tick);
     }
 
@@ -37,10 +40,11 @@ public class EphemeralityManager {
      * @param entity The entity to manage
      * @param target The player the entity should be visible to
      */
-    public void add(Entity entity, ServerPlayer target) {
+    public <T extends Entity> T add(T entity, ServerPlayer target) {
         EphemeralEntity e = new EphemeralEntity(entity, target);
         entities.add(e);
         e.addPairing();
+        return entity;
     }
 
     /**

@@ -2,6 +2,7 @@ package ec.brooke.kanoho;
 
 import ec.brooke.kanoho.features.CooldownCommand;
 import ec.brooke.kanoho.features.VelocityCommand;
+import ec.brooke.kanoho.features.props.WrenchHandler;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackCommand;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackLibrary;
 import ec.brooke.kanoho.framework.EphemeralityManager;
@@ -15,14 +16,17 @@ public class Kanoho implements ModInitializer {
     public static final KanohoConfig CONFIG = KanohoConfig.load();
 
     public static final ResourcepackLibrary resourcepacks = new ResourcepackLibrary();
+    public static EphemeralityManager ephemerality = new EphemeralityManager();
     public static final FunctionEvents events = new FunctionEvents();
-    public static EphemeralityManager ephemerality;
 
     @Override
     public void onInitialize() {
+        resourcepacks.register();
+        ephemerality.register();
         events.setup();
 
         // Register commands
+        new WrenchHandler().register();
         new VelocityCommand().register();
         new ResourcepackCommand().register();
         new CooldownCommand().register();

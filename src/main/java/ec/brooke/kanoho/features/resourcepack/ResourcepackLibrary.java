@@ -41,7 +41,10 @@ public class ResourcepackLibrary {
 
     private final HashMap<String, ResourcepackDefinition> library = new HashMap<>();
 
-    public ResourcepackLibrary() {
+    /**
+     * Registers component's event listeners.
+     */
+    public void register() {
         ServerLifecycleEvents.SERVER_STARTING.register(this::reload);
         ServerLifecycleEvents.START_DATA_PACK_RELOAD.register((s, c) -> this.reload(s));
         ServerPlayConnectionEvents.JOIN.register((l, s, m) -> this.apply(l.player));
