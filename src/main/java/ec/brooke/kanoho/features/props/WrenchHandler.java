@@ -44,7 +44,7 @@ public class WrenchHandler {
                 return true;
             }
 
-            if (!WRENCH.from(player.getMainHandItem()).orElse(false)) end(state);
+            if (!WRENCH.from(player.getMainHandItem()).orElse(false)) state.gizmos.forEach(IWrenchGizmo::remove);
             else if (!state.dragging) state.selected = state.gizmos.stream().filter(IWrenchGizmo::isHovered).findFirst().orElse(null);
             state.gizmos.forEach(gizmo -> gizmo.setSelected(gizmo == state.selected));
             if (state.dragging) state.selected.drag();
@@ -65,12 +65,9 @@ public class WrenchHandler {
             newstate.player = player;
             newstate.prop = prop;
             newstate.gizmos = List.of(
-                Kanoho.ephemerality.add(new WrenchMoveGizmo(player, prop, Direction.Axis.X, false), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchMoveGizmo(player, prop, Direction.Axis.Y, false), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchMoveGizmo(player, prop, Direction.Axis.Z, false), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchMoveGizmo(player, prop, Direction.Axis.X, true), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchMoveGizmo(player, prop, Direction.Axis.Y, true), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchMoveGizmo(player, prop, Direction.Axis.Z, true), (ServerPlayer) player)
+                Kanoho.ephemerality.add(new WrenchRotateGizmo(player, prop, Direction.Axis.X), (ServerPlayer) player),
+                Kanoho.ephemerality.add(new WrenchRotateGizmo(player, prop, Direction.Axis.Y), (ServerPlayer) player),
+                Kanoho.ephemerality.add(new WrenchRotateGizmo(player, prop, Direction.Axis.Z), (ServerPlayer) player)
             );
 
             this.state.put(player, newstate);
@@ -79,15 +76,13 @@ public class WrenchHandler {
                 state.dragging = !state.dragging;
                 if (state.dragging) state.selected.startDrag();
                 else state.selected.stopDrag();
-            } else end(state);
+            } else {
+                state.gizmos.forEach(IWrenchGizmo::remove);
+                this.state.remove(state.player);
+            }
         }
 
         return InteractionResult.SUCCESS;
-    }
-
-    private void end(WrenchState state) {
-        state.gizmos.forEach(IWrenchGizmo::remove);
-        this.state.remove(state.player);
     }
 
     private @Nullable Display.ItemDisplay findProp(Player player, Level world) {

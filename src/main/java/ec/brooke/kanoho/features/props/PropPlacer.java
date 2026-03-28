@@ -48,7 +48,6 @@ public class PropPlacer {
         ItemStack held = player.getItemInHand(hand);
 
         Display.ItemDisplay entity = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, level);
-        entity.forceSetRotation(-player.getYRot(), 0);
         entity.setItemStack(held);
         entity.setPos(position);
 
