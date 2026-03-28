@@ -1,5 +1,6 @@
 package ec.brooke.kanoho.features.props;
 
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvent;
@@ -25,9 +26,18 @@ public class PropPlacer {
 
     public void register() {
         UseItemCallback.EVENT.register(this::onUseItem);
+        UseBlockCallback.EVENT.register(this::onUseBlock);
+    }
+
+    private InteractionResult onUseBlock(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
+        return place(player, level, hand);
     }
 
     private InteractionResult onUseItem(Player player, Level level, InteractionHand hand) {
+        return place(player, level, hand);
+    }
+
+    private static InteractionResult place(Player player, Level level, InteractionHand hand) {
         if (!player.mayBuild() || !PROP.from(player.getItemInHand(hand)).orElse(false)) return InteractionResult.PASS;
 
         ClipContext context = new ClipContext(
