@@ -42,16 +42,12 @@ public class WrenchHandler {
         SwingCallback.EVENT.register(this::swing);
     }
 
-    private boolean holdingWrench(Player player) {
-        return WRENCH.from(player.getMainHandItem()).orElse(false);
-    }
-
     private void tick(MinecraftServer server) {
         this.state.values().removeIf(state -> {
             if (
                 state.player.isRemoved()
                 || state.prop.isRemoved()
-                || holdingWrench(state.player)
+                || !WRENCH.from(state.player.getMainHandItem()).orElse(false)
             ) return state.cleanup();
 
             return false;
@@ -59,7 +55,7 @@ public class WrenchHandler {
     }
 
     private void swing(Player player, Level level, InteractionHand hand) {
-        if (!player.mayBuild() || !holdingWrench(player)) return;
+        if (!player.mayBuild() || !WRENCH.from(player.getItemInHand(hand)).orElse(false)) return;
 
         @Nullable WrenchState state = this.state.get(player);
 
@@ -87,7 +83,7 @@ public class WrenchHandler {
     }
 
     private InteractionResult onUseItem(Player player, Level level, InteractionHand hand) {
-        if (!player.mayBuild() || !holdingWrench(player)) return InteractionResult.PASS;
+        if (!player.mayBuild() || !WRENCH.from(player.getItemInHand(hand)).orElse(false)) return InteractionResult.PASS;
 
         @Nullable WrenchState state = this.state.get(player);
         if (state != null && state.selected != null) {
