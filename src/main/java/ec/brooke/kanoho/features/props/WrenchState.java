@@ -28,14 +28,14 @@ public class WrenchState {
     );
 
     @Nullable public WrenchGizmo selected;
-    public Display.ItemDisplay prop;
+    public Display prop;
     public boolean dragging;
     public Player player;
 
     private List<WrenchGizmo> gizmos;
     private int mode;
 
-    public WrenchState(Player player, Display.ItemDisplay prop) {
+    public WrenchState(Player player, Display prop) {
         this.gizmos = List.of();
         this.player = player;
         this.prop = prop;

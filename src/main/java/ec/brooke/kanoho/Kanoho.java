@@ -2,7 +2,7 @@ package ec.brooke.kanoho;
 
 import ec.brooke.kanoho.features.CooldownCommand;
 import ec.brooke.kanoho.features.VelocityCommand;
-import ec.brooke.kanoho.features.props.PropPlacer;
+import ec.brooke.kanoho.features.props.PropSystem;
 import ec.brooke.kanoho.features.props.WrenchHandler;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackCommand;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackLibrary;
@@ -26,8 +26,7 @@ public class Kanoho implements ModInitializer {
         ephemerality.register();
         events.setup();
 
-        new WrenchHandler().register();
-        new PropPlacer().register();
+        new PropSystem().register();
 
         // Register commands
         new VelocityCommand().register();

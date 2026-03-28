@@ -5,17 +5,12 @@ import ec.brooke.kanoho.framework.SwingCallback;
 import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -25,12 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 
-import static ec.brooke.kanoho.features.components.ItemComponents.PROP;
-
 public class WrenchHandler {
     private static final ComponentType<Boolean> WRENCH = new ComponentType<>("wrench", Codec.BOOL);
     private static final SoundEvent CHANGE_SOUND = SoundEvents.COPPER_BULB_TURN_ON;
-    private static final SoundEvent REMOVE_SOUND = SoundEvents.ARMOR_STAND_BREAK;
     private static final double FIND_RADIUS = 0.75;
     private static final double FIND_DISTANCE = 5;
     private static final int SWING_COOLDOWN = 5;
@@ -71,20 +63,10 @@ public class WrenchHandler {
             return;
         }
 
-        Display.ItemDisplay prop = findProp(player, level);
+        Display prop = findProp(player, level);
         if (prop != null && (state == null || prop == state.prop)) {
-            prop.remove(Entity.RemovalReason.KILLED);
             if (state != null) state.cleanup();
-
-            Vec3 position = prop.position();
-            level.playSound(null, position.x, position.y, position.z, REMOVE_SOUND, SoundSource.BLOCKS,1f, 1f);
-            ((ServerLevel) level).sendParticles(
-                new ItemParticleOption(ParticleTypes.ITEM, prop.getItemStack()),
-                position.x, position.y, position.z,
-                50, // Count
-                0.25, 0.25, 0.25, // Offset
-                0.1 // Speed
-            );
+            PropSystem.remove(level, prop);
         } else if (state != null) {
             player.playNotifySound(CHANGE_SOUND, player.getSoundSource(), 1, 2);
             this.state.remove(state.player);
@@ -100,7 +82,7 @@ public class WrenchHandler {
             player.playNotifySound(CHANGE_SOUND, player.getSoundSource(), 1, state.dragging ? 0.75f : 1);
             state.toggleDragging();
         } else {
-            Display.ItemDisplay prop = findProp(player, level);
+            Display prop = findProp(player, level);
 
             if (prop != null) {
                 if (state != null && state.prop == prop) {
@@ -121,21 +103,21 @@ public class WrenchHandler {
         return InteractionResult.SUCCESS;
     }
 
-    private @Nullable Display.ItemDisplay findProp(Player player, Level level) {
+    private @Nullable Display findProp(Player player, Level level) {
         Vec3 eyePos = player.getEyePosition();
         Vec3 lookVec = player.getLookAngle();
 
         // Broad AABB to cheaply cull candidates before the precise check
         AABB searchBox = AABB.ofSize(eyePos, FIND_DISTANCE * 2, FIND_DISTANCE * 2, FIND_DISTANCE * 2);
 
-        List<Display.ItemDisplay> candidates = level.getEntitiesOfClass(Display.ItemDisplay.class, searchBox,
-                e -> PROP.from(e.getItemStack()).orElse(false)
+        List<Display> candidates = level.getEntitiesOfClass(Display.class, searchBox,
+                e -> e.getTags().contains(PropSystem.PROP_TAG)
         );
 
-        Display.ItemDisplay closest = null;
+        Display closest = null;
         double closestDist = Double.MAX_VALUE;
 
-        for (Display.ItemDisplay entity : candidates) {
+        for (Display entity : candidates) {
             Vec3 toEntity = entity.getPosition(0).subtract(eyePos);
 
             // How far along the look direction this entity is

@@ -12,7 +12,6 @@ import javax.naming.OperationNotSupportedException;
 public class ItemComponents {
     public static final ComponentType<ResourceLocation> ON_USED = new ComponentType<>("on_used", ResourceLocation.CODEC);
     public static final ComponentType<Boolean> CONSUMED = new ComponentType<>("consumed", Codec.BOOL);
-    public static final ComponentType<Boolean> PROP = new ComponentType<>("prop", Codec.BOOL);
 
     private ItemComponents() throws OperationNotSupportedException {
         throw new OperationNotSupportedException("Class should not be instantiated");
