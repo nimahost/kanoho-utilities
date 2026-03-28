@@ -1,7 +1,6 @@
 package ec.brooke.kanoho.features.props;
 
 import com.mojang.serialization.Codec;
-import ec.brooke.kanoho.Kanoho;
 import ec.brooke.kanoho.framework.SwingCallback;
 import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -24,9 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 
 import static ec.brooke.kanoho.features.components.ItemComponents.PROP;
 
