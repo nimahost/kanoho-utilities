@@ -79,6 +79,10 @@ public class WrenchHandler {
                 0.25, 0.25, 0.25, // Offset
                 0.1 // Speed
             );
+        } else if (state != null) {
+            player.playNotifySound(CHANGE_SOUND, player.getSoundSource(), 1, 2);
+            this.state.remove(state.player);
+            state.cleanup();
         }
     }
 
