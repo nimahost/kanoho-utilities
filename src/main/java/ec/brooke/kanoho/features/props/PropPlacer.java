@@ -43,7 +43,10 @@ public class PropPlacer {
 
         BlockHitResult hit = level.clip(context);
         if (hit.getType() == BlockHitResult.Type.MISS) return InteractionResult.PASS;
-        Vec3 position = hit.getLocation().subtract(player.getLookAngle()).align(EnumSet.allOf(Direction.Axis.class)).add(0.5, 0.5, 0.5);
+        Vec3 position = hit.getLocation()
+                .subtract(player.getLookAngle().scale(0.01))
+                .align(EnumSet.allOf(Direction.Axis.class))
+                .add(0.5, 0.5, 0.5);
 
         ItemStack held = player.getItemInHand(hand);
 
