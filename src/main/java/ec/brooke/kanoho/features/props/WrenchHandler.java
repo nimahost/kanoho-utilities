@@ -1,6 +1,7 @@
 package ec.brooke.kanoho.features.props;
 
 import com.mojang.serialization.Codec;
+import ec.brooke.kanoho.Kanoho;
 import ec.brooke.kanoho.framework.SwingCallback;
 import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -23,7 +24,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import static ec.brooke.kanoho.features.components.ItemComponents.PROP;
 
@@ -33,7 +36,9 @@ public class WrenchHandler {
     private static final SoundEvent REMOVE_SOUND = SoundEvents.ARMOR_STAND_BREAK;
     private static final double FIND_RADIUS = 0.75;
     private static final double FIND_DISTANCE = 5;
+    private static final int SWING_COOLDOWN = 5;
 
+    private static final HashMap<Player, Integer> swingCooldowns = new HashMap<>();
     private final HashMap<Player, WrenchState> state = new HashMap<>();
 
     public void register() {
@@ -43,6 +48,9 @@ public class WrenchHandler {
     }
 
     private void tick(MinecraftServer server) {
+        swingCooldowns.replaceAll((player, cooldown) -> cooldown - 1);
+        swingCooldowns.values().removeIf(i -> i == 0);
+
         this.state.values().removeIf(state -> {
             if (
                 state.player.isRemoved()
@@ -55,7 +63,8 @@ public class WrenchHandler {
     }
 
     private void swing(Player player, Level level, InteractionHand hand) {
-        if (!player.mayBuild() || !WRENCH.from(player.getItemInHand(hand)).orElse(false)) return;
+        if (swingCooldowns.containsKey(player) || !player.mayBuild() || !WRENCH.from(player.getItemInHand(hand)).orElse(false)) return;
+        swingCooldowns.put(player, SWING_COOLDOWN);
 
         @Nullable WrenchState state = this.state.get(player);
 
