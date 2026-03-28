@@ -46,6 +46,11 @@ public class WrenchMoveGizmo extends WrenchGizmo {
     }
 
     @Override
+    public void cancelDrag() {
+        state.prop.setPos(initialPropPos);
+    }
+
+    @Override
     protected void drag() {
         Vec3 pos = initialPropPos.add(calculateOffset(initialPropPos)).subtract(clickOffset);
 

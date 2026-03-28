@@ -57,6 +57,13 @@ public class WrenchState {
         if (dragging && selected != null) selected.startDrag();
     }
 
+    public void cancelDragging() {
+        if (!dragging) return;
+
+        if (selected != null) selected.cancelDrag();
+        toggleDragging();
+    }
+
     public void cycle() {
         this.cleanup();
         this.mode = (mode + 1) % MODES.size();

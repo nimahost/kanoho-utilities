@@ -43,6 +43,11 @@ public class WrenchRotateGizmo extends WrenchGizmo {
     }
 
     @Override
+    public void cancelDrag() {
+        state.prop.setTransformation(initialPropTransform);
+    }
+
+    @Override
     protected void drag() {
         Vec3 currentClickPos = calculateOffset(state.prop.position()).normalize();
         double parallel = initialClickPos.dot(currentClickPos);

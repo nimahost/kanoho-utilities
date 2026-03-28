@@ -68,8 +68,6 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
         } else if (state.selected == this) drag();
     }
 
-    public abstract void startDrag();
-
     private boolean isHovered() {
         Vec3 eyePos = state.player.getEyePosition();
         Vec3 lookVec = state.player.getViewVector(1.0f).normalize();
@@ -88,6 +86,10 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
 
         return closestPoint.distanceTo(this.position()) <= 0.5f;
     }
+
+    public abstract void startDrag();
+
+    public abstract void cancelDrag();
 
     protected abstract void drag();
 

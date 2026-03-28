@@ -59,6 +59,12 @@ public class WrenchHandler {
 
         @Nullable WrenchState state = this.state.get(player);
 
+        if (state != null && state.selected != null) {
+            player.playNotifySound(CHANGE_SOUND, player.getSoundSource(), 1, 0.75f);
+            state.cancelDragging();
+            return;
+        }
+
         Display.ItemDisplay prop = findProp(player, level);
         if (prop != null && (state == null || prop == state.prop)) {
             prop.remove(Entity.RemovalReason.KILLED);
