@@ -28,6 +28,7 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
         this.plane = plane;
         this.axis = axis;
 
+        setGlowingTag(true);
         item = new ItemStack(Items.WOODEN_SWORD);
         item.applyComponents(DataComponentMap.builder().set(
                 DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(
@@ -62,7 +63,8 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
         if (!state.dragging) {
             boolean selected = (state.selected == null || state.selected == this) && isHovered();
 
-            this.setGlowingTag(selected);
+            this.setGlowColorOverride(selected ? -1 : getColor());
+
             if (selected) state.selected = this;
             else if (state.selected == this) state.selected = null;
         } else if (state.selected == this) drag();
