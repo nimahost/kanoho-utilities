@@ -2,9 +2,6 @@ package ec.brooke.kanoho.features.props;
 
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -24,7 +21,7 @@ import java.util.EnumSet;
 import static ec.brooke.kanoho.features.components.ItemComponents.PROP;
 
 public class PropPlacer {
-    private static final SoundEvent SOUND = SoundEvents.WOOL_PLACE;
+    private static final SoundEvent SOUND = SoundEvents.ARMOR_STAND_PLACE;
 
     public void register() {
         UseItemCallback.EVENT.register(this::onUseItem);
@@ -56,13 +53,6 @@ public class PropPlacer {
 
         player.swing(hand);
         level.playSound(null, position.x, position.y, position.z, SOUND, SoundSource.BLOCKS,1f, 1f);
-        ((ServerLevel) level).sendParticles(
-                new ItemParticleOption(ParticleTypes.ITEM, held),
-                position.x, position.y, position.z,
-                50, // Count
-                0.25, 0.25, 0.25, // Offset
-                0.1 // Speed
-        );
 
         level.addFreshEntity(entity);
         return InteractionResult.SUCCESS;
