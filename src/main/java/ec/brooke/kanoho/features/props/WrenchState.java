@@ -11,22 +11,36 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class WrenchState {
+    private static final List<GizmoMode> MODES = List.of(
+            new GizmoMode("move", List.of(
+                    state -> new WrenchMoveGizmo(state, Direction.Axis.X, false),
+                    state -> new WrenchMoveGizmo(state, Direction.Axis.Y, false),
+                    state -> new WrenchMoveGizmo(state, Direction.Axis.Z, false),
+                    state -> new WrenchMoveGizmo(state, Direction.Axis.X, true),
+                    state -> new WrenchMoveGizmo(state, Direction.Axis.Y, true),
+                    state -> new WrenchMoveGizmo(state, Direction.Axis.Z, true)
+            )),
+            new GizmoMode("rotate", List.of(
+                    state -> new WrenchRotateGizmo(state, Direction.Axis.X),
+                    state -> new WrenchRotateGizmo(state, Direction.Axis.Y),
+                    state -> new WrenchRotateGizmo(state, Direction.Axis.Z)
+            ))
+    );
+
     @Nullable public WrenchGizmo selected;
     public Display.ItemDisplay prop;
     public boolean dragging;
     public Player player;
 
     private List<WrenchGizmo> gizmos;
+    private int mode;
 
     public WrenchState(Player player, Display.ItemDisplay prop) {
-        this.gizmos = List.of(
-                new WrenchRotateGizmo(this, Direction.Axis.X),
-                new WrenchRotateGizmo(this, Direction.Axis.Y),
-                new WrenchRotateGizmo(this, Direction.Axis.Z)
-        );
+        this.gizmos = List.of();
         this.player = player;
         this.prop = prop;
 
+        this.mode = -1;
         this.cycle();
     }
 
@@ -44,5 +58,17 @@ public class WrenchState {
     }
 
     public void cycle() {
+        this.cleanup();
+        this.mode = (mode + 1) % MODES.size();
+        this.gizmos = MODES.get(mode).gizmos.stream().map(
+                factory -> Kanoho.ephemerality.add(factory.create(this), (ServerPlayer) player)
+        ).toList();
+    }
+
+    private record GizmoMode(String name, List<GizmoFactory> gizmos) {
+        @FunctionalInterface
+        public interface GizmoFactory {
+            WrenchGizmo create(WrenchState state);
+        }
     }
 }
