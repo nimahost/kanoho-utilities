@@ -5,6 +5,8 @@ import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
@@ -21,6 +23,7 @@ import static ec.brooke.kanoho.features.components.ItemComponents.PROP;
 
 public class WrenchHandler {
     private static final ComponentType<Boolean> WRENCH = new ComponentType<>("wrench", Codec.BOOL);
+    private static final SoundEvent SOUND = SoundEvents.COPPER_BULB_TURN_ON;
     private static final double FIND_RADIUS = 0.75;
     private static final double FIND_DISTANCE = 5;
 
@@ -47,17 +50,23 @@ public class WrenchHandler {
         if (!player.mayBuild() || !WRENCH.from(player.getItemInHand(hand)).orElse(false)) return InteractionResult.PASS;
 
         @Nullable WrenchState state = this.state.get(player);
-        if (state != null && state.selected != null) state.toggleDragging();
-        else {
+        if (state != null && state.selected != null) {
+            player.playNotifySound(SOUND, player.getSoundSource(), 1, state.dragging ? 0.75f : 1);
+            state.toggleDragging();
+        } else {
             Display.ItemDisplay prop = findProp(player, level);
 
             if (prop != null) {
-                if (state != null && state.prop == prop) state.cycle();
-                else {
+                if (state != null && state.prop == prop) {
+                    player.playNotifySound(SOUND, player.getSoundSource(), 1, 2);
+                    state.cycle();
+                } else {
+                    player.playNotifySound(SOUND, player.getSoundSource(), 1, 2);
                     WrenchState old = this.state.put(player, new WrenchState(player, prop));
                     if (old != null) old.cleanup();
                 }
             } else if (state != null) {
+                player.playNotifySound(SOUND, player.getSoundSource(), 1, 2);
                 this.state.remove(state.player);
                 state.cleanup();
             }
