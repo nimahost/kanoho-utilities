@@ -1,13 +1,10 @@
 package ec.brooke.kanoho.features.props;
 
 import com.mojang.serialization.Codec;
-import ec.brooke.kanoho.Kanoho;
 import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
@@ -31,23 +28,16 @@ public class WrenchHandler {
 
     public void register() {
         UseItemCallback.EVENT.register(this::onUseItem);
-        ServerTickEvents.END_WORLD_TICK.register(this::tick);
+        ServerTickEvents.END_SERVER_TICK.register(this::tick);
     }
 
-    private void tick(ServerLevel server) {
-        this.state.entrySet().removeIf(entry -> {
-            WrenchState state = entry.getValue();
-            Player player = entry.getKey();
-
-            if (player.isRemoved() || state.prop.isRemoved()) {
-                state.gizmos.forEach(IWrenchGizmo::remove);
-                return true;
-            }
-
-            if (!WRENCH.from(player.getMainHandItem()).orElse(false)) state.gizmos.forEach(IWrenchGizmo::remove);
-            else if (!state.dragging) state.selected = state.gizmos.stream().filter(IWrenchGizmo::isHovered).findFirst().orElse(null);
-            state.gizmos.forEach(gizmo -> gizmo.setSelected(gizmo == state.selected));
-            if (state.dragging) state.selected.drag();
+    private void tick(MinecraftServer server) {
+        this.state.values().removeIf(state -> {
+            if (
+                state.player.isRemoved()
+                || state.prop.isRemoved()
+                || !WRENCH.from(state.player.getMainHandItem()).orElse(false)
+            ) return state.cleanup();
 
             return false;
         });
@@ -57,28 +47,19 @@ public class WrenchHandler {
         if (!player.mayBuild() || !WRENCH.from(player.getItemInHand(hand)).orElse(false)) return InteractionResult.PASS;
 
         @Nullable WrenchState state = this.state.get(player);
-        if (state == null) {
+        if (state != null && state.selected != null) state.toggleDragging();
+        else {
             Display.ItemDisplay prop = findProp(player, level);
-            if (prop == null) return InteractionResult.PASS;
 
-            WrenchState newstate = new WrenchState();
-            newstate.player = player;
-            newstate.prop = prop;
-            newstate.gizmos = List.of(
-                Kanoho.ephemerality.add(new WrenchRotateGizmo(player, prop, Direction.Axis.X), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchRotateGizmo(player, prop, Direction.Axis.Y), (ServerPlayer) player),
-                Kanoho.ephemerality.add(new WrenchRotateGizmo(player, prop, Direction.Axis.Z), (ServerPlayer) player)
-            );
-
-            this.state.put(player, newstate);
-        } else {
-            if (state.selected != null) {
-                state.dragging = !state.dragging;
-                if (state.dragging) state.selected.startDrag();
-                else state.selected.stopDrag();
-            } else {
-                state.gizmos.forEach(IWrenchGizmo::remove);
+            if (prop != null) {
+                if (state != null && state.prop == prop) state.cycle();
+                else {
+                    WrenchState old = this.state.put(player, new WrenchState(player, prop));
+                    if (old != null) old.cleanup();
+                }
+            } else if (state != null) {
                 this.state.remove(state.player);
+                state.cleanup();
             }
         }
 
@@ -124,13 +105,5 @@ public class WrenchHandler {
         }
 
         return closest;
-    }
-
-    static class WrenchState {
-        public Player player;
-        public Display.ItemDisplay prop;
-        public List<IWrenchGizmo> gizmos;
-        public IWrenchGizmo selected;
-        public boolean dragging;
     }
 }

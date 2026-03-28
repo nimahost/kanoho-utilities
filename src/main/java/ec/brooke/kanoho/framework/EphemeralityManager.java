@@ -27,11 +27,12 @@ public class EphemeralityManager {
         entities.removeIf((entity) -> {
             if (entity.target.isRemoved()) return true;
 
+            if (entity.isRemoved()) return entity.removePairing();
+
             entity.tick();
-            if (entity.isRemoved()) {
-                entity.removePairing();
-                return true;
-            } else return false;
+
+            if (entity.isRemoved()) return entity.removePairing();
+            else return false;
         });
     }
 
@@ -94,8 +95,9 @@ public class EphemeralityManager {
         /**
          * Remove the corresponding pairing of this entity on the target's client
          */
-        public void removePairing() {
+        public boolean removePairing() {
             this.serverEntity.removePairing(this.target);
+            return true;
         }
     }
 }
