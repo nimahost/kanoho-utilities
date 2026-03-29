@@ -59,8 +59,11 @@ public class WrenchHandler {
         for (Player player : players) {
             boolean wrench = player.isRemoved() || WRENCH.from(player.getMainHandItem()).orElse(false);
 
-            if (wrench) this.players.computeIfAbsent(player, WrenchState::new).decrementCooldown();
-            else removeState(player);
+            if (wrench) {
+                WrenchState state = this.players.computeIfAbsent(player, WrenchState::new);
+                if (state.selection != null && state.selection.isRemoved()) state.deselectProp();
+                state.decrementCooldown();
+            } else removeState(player);
         }
     }
 
