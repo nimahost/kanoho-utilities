@@ -14,7 +14,7 @@ public class WrenchMoveGizmo extends WrenchGizmo {
     private Vec3 initialPropPos;
     private Vec3 clickOffset;
 
-    public WrenchMoveGizmo(WrenchState state, Direction.Axis axis, boolean plane) {
+    public WrenchMoveGizmo(WrenchHandler.WrenchState state, Direction.Axis axis, boolean plane) {
         super(state, axis, "move" + (plane ? "_plane" : ""), plane);
 
         this.setTransformation(new Transformation(
@@ -33,21 +33,21 @@ public class WrenchMoveGizmo extends WrenchGizmo {
         if (plane) position = new Vec3(1,1,1).subtract(axis.getPositive().getUnitVec3()).scale(0.75f);
         else position = axis.getPositive().getUnitVec3();
 
-        Vec3 player = state.player.getEyePosition().subtract(state.prop.position());
+        Vec3 player = state.player.getEyePosition().subtract(state.selection.position());
         Vec3 sign = new Vec3(Math.signum(player.x), Math.signum(player.y), Math.signum(player.z));
 
-        this.setPos(state.prop.position().add(position.multiply(sign)));
+        this.setPos(state.selection.position().add(position.multiply(sign)));
     }
 
     @Override
     public void startDrag() {
-        initialPropPos = state.prop.position();
+        initialPropPos = state.selection.position();
         clickOffset = calculateOffset(initialPropPos);
     }
 
     @Override
     public void cancelDrag() {
-        state.prop.setPos(initialPropPos);
+        state.selection.setPos(initialPropPos);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class WrenchMoveGizmo extends WrenchGizmo {
             pos = pos.scale(1 / SNAP).align(axes).scale(SNAP);
         }
 
-        state.prop.setPos(pos);
+        state.selection.setPos(pos);
     }
 }

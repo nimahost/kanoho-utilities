@@ -3,7 +3,6 @@ package ec.brooke.kanoho;
 import ec.brooke.kanoho.features.CooldownCommand;
 import ec.brooke.kanoho.features.VelocityCommand;
 import ec.brooke.kanoho.features.props.PropSystem;
-import ec.brooke.kanoho.features.props.WrenchHandler;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackCommand;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackLibrary;
 import ec.brooke.kanoho.framework.EphemeralityManager;

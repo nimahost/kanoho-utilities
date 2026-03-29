@@ -10,7 +10,7 @@ public class WrenchRotateGizmo extends WrenchGizmo {
     private Transformation initialPropTransform;
     private Vec3 initialClickPos;
 
-    public WrenchRotateGizmo(WrenchState state, Direction.Axis axis) {
+    public WrenchRotateGizmo(WrenchHandler.WrenchState state, Direction.Axis axis) {
         super(state, axis, "rotate", true);
     }
 
@@ -19,8 +19,8 @@ public class WrenchRotateGizmo extends WrenchGizmo {
         super.tick();
 
         Vec3 plane = ONE.subtract(axisVec());
-        Vec3 player = state.player.getEyePosition().subtract(state.prop.position());
-        this.setPos(state.prop.position().add(player.multiply(plane).normalize()));
+        Vec3 player = state.player.getEyePosition().subtract(state.selection.position());
+        this.setPos(state.selection.position().add(player.multiply(plane).normalize()));
 
         Quaternionf rotation = switch (axis) {
             case X -> new Quaternionf().rotateX((float) (-Math.atan2(player.y, player.z) + Math.PI / 2));
@@ -38,25 +38,25 @@ public class WrenchRotateGizmo extends WrenchGizmo {
 
     @Override
     public void startDrag() {
-        initialPropTransform = ItemDisplay.createTransformation(state.prop.getEntityData());
-        initialClickPos = calculateOffset(state.prop.position()).normalize();
+        initialPropTransform = ItemDisplay.createTransformation(state.selection.getEntityData());
+        initialClickPos = calculateOffset(state.selection.position()).normalize();
     }
 
     @Override
     public void cancelDrag() {
-        state.prop.setTransformation(initialPropTransform);
+        state.selection.setTransformation(initialPropTransform);
     }
 
     @Override
     protected void drag() {
-        Vec3 currentClickPos = calculateOffset(state.prop.position()).normalize();
+        Vec3 currentClickPos = calculateOffset(state.selection.position()).normalize();
         double parallel = initialClickPos.dot(currentClickPos);
         Vec3 perpendicularAxis = axis.getPositive().getUnitVec3().cross(initialClickPos);
         double perpendicular = perpendicularAxis.dot(currentClickPos);
         double angle = Math.atan2(perpendicular, parallel);
         Quaternionf result = new Quaternionf().rotateAxis((float) angle, axis.getPositive().getUnitVec3().toVector3f());
 
-        state.prop.setTransformation(new Transformation(
+        state.selection.setTransformation(new Transformation(
             initialPropTransform.getTranslation(),
             result.mul(initialPropTransform.getLeftRotation()),
             initialPropTransform.getScale(),

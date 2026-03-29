@@ -17,13 +17,13 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
     private static final double ROOT_HALF = Math.sqrt(0.5);
     private static final double CLAMP = 16;
 
+    protected final WrenchHandler.WrenchState state;
     protected final Direction.Axis axis;
-    protected final WrenchState state;
     protected final boolean plane;
     private final ItemStack item;
 
-    public WrenchGizmo(WrenchState state, Direction.Axis axis, String model, boolean plane) {
-        super(EntityType.ITEM_DISPLAY, state.prop.level());
+    public WrenchGizmo(WrenchHandler.WrenchState state, Direction.Axis axis, String model, boolean plane) {
+        super(EntityType.ITEM_DISPLAY, state.selection.level());
         this.state = state;
         this.plane = plane;
         this.axis = axis;
@@ -61,13 +61,13 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
         super.tick();
 
         if (!state.dragging) {
-            boolean selected = (state.selected == null || state.selected == this) && isHovered();
+            boolean hovered = (state.hovered == null || state.hovered == this) && isHovered();
 
-            this.setGlowColorOverride(selected ? -1 : getColor());
+            this.setGlowColorOverride(hovered ? -1 : getColor());
 
-            if (selected) state.selected = this;
-            else if (state.selected == this) state.selected = null;
-        } else if (state.selected == this) drag();
+            if (hovered) state.hovered = this;
+            else if (state.hovered == this) state.hovered = null;
+        } else if (state.hovered == this) drag();
     }
 
     private boolean isHovered() {
