@@ -7,6 +7,7 @@
     "ConsumableMixin",
     "EntityMixin",
     "ItemStackMixin",
+    "ServerGamePacketListenerMixin",
     "ServerItemCooldownsMixin",
     "ServerPlayerMixin"
   ],

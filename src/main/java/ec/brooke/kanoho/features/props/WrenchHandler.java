@@ -2,17 +2,14 @@ package ec.brooke.kanoho.features.props;
 
 import com.mojang.serialization.Codec;
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.framework.SwingCallback;
+import ec.brooke.kanoho.framework.RawInteractCallback;
 import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -52,8 +49,7 @@ public class WrenchHandler {
 
     public void register() {
         ServerTickEvents.END_SERVER_TICK.register(this::tick);
-        UseItemCallback.EVENT.register(this::onUseItem);
-        SwingCallback.EVENT.register(this::swing);
+        RawInteractCallback.EVENT.register(this::onInteract);
     }
 
     private void tick(MinecraftServer server) {
@@ -68,35 +64,37 @@ public class WrenchHandler {
         }
     }
 
-    private void swing(Player player, Level level, InteractionHand hand) {
+    private void onInteract(Player player, Level level, RawInteractCallback.Action action) {
         WrenchState state = this.players.get(player);
         if (state == null || state.cooldown()) return;
 
+        switch (action) {
+            case ATTACK -> attack(state, level);
+            case USE -> use(state, level);
+        }
+    }
+
+    private void attack(WrenchState state, Level level) {
         if (state.isDragging()) state.cancelDrag();
         else {
-            Display target = findProp(player, level);
+            Display target = findProp(state.player, level);
             if (target != null && (!state.hasSelected() || target == state.selection)) {
-                if (state.hasSelected()) removeState(player);
+                if (state.hasSelected()) removeState(state.player);
                 PropSystem.remove(level, target);
             } else if (state.hasSelected()) state.deselectProp();
         }
     }
 
-    private InteractionResult onUseItem(Player player, Level level, InteractionHand hand) {
-        WrenchState state = this.players.get(player);
-        if (state == null || state.cooldown()) return InteractionResult.PASS;
-
+    private void use(WrenchState state, Level level) {
         if (state.hovered != null) state.toggleDragging();
         else {
-            Display target = findProp(player, level);
+            Display target = findProp(state.player, level);
 
             if (target != null) {
                 if (state.selection == target) state.cycleMode();
                 else state.selectProp(target);
             } else if (state.hasSelected()) state.deselectProp();
         }
-
-        return InteractionResult.SUCCESS;
     }
 
     private @Nullable Display findProp(Player player, Level level) {
@@ -146,6 +144,7 @@ public class WrenchHandler {
     }
 
     public static class WrenchState {
+        private final WrenchSuppressor suppressor;
         @Nullable public WrenchGizmo hovered;
         @Nullable public Display selection;
         public final Player player;
@@ -156,6 +155,7 @@ public class WrenchHandler {
         private int mode;
 
         public WrenchState(Player player) {
+            suppressor = Kanoho.ephemerality.add(new WrenchSuppressor(player), (ServerPlayer) player);
             this.gizmos = List.of();
             this.player = player;
         }
@@ -184,6 +184,7 @@ public class WrenchHandler {
         }
 
         public void cleanup() {
+            suppressor.remove(Entity.RemovalReason.DISCARDED);
             this.removeGizmos();
             this.selection = null;
         }
