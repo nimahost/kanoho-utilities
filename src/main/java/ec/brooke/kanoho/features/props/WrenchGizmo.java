@@ -14,7 +14,9 @@ import java.util.List;
 
 public abstract class WrenchGizmo extends Display.ItemDisplay {
     protected static final Vec3 ONE = new Vec3(1, 1, 1);
-    private static final double ROOT_HALF = Math.sqrt(0.5);
+    private static final double VIEW_ANGLE = 60;
+    private static final double SIN_VIEW_ANGLE = Math.sin(Math.toRadians(VIEW_ANGLE));
+    private static final double COS_VIEW_ANGLE =  Math.cos(Math.toRadians(VIEW_ANGLE));
     private static final double CLAMP = 16;
 
     protected final WrenchHandler.WrenchState state;
@@ -76,7 +78,8 @@ public abstract class WrenchGizmo extends Display.ItemDisplay {
 
         Vec3 toTarget = this.position().subtract(eyePos);
 
-        if (Math.abs(axis.getPositive().getUnitVec3().normalize().dot(lookVec)) > ROOT_HALF != plane) return false;
+        double threshold = (plane) ? COS_VIEW_ANGLE : SIN_VIEW_ANGLE;
+        if (Math.abs(axis.getPositive().getUnitVec3().normalize().dot(lookVec)) > threshold != plane) return false;
 
         // Project toTarget onto the look ray to find the closest point
         double t = toTarget.dot(lookVec);
