@@ -8,7 +8,7 @@ import javax.naming.OperationNotSupportedException;
 import java.util.List;
 
 /**
- * Static class containing all Kanoho player components
+ * Static class containing all Kanoho entity components
  */
 public class EntityComponents {
     public static final ComponentType<List<String>> COOLDOWNS = new ComponentType<>("cooldowns", Codec.list(Codec.STRING));

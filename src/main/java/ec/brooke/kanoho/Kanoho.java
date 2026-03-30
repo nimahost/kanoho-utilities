@@ -1,6 +1,7 @@
 package ec.brooke.kanoho;
 
 import ec.brooke.kanoho.features.CooldownCommand;
+import ec.brooke.kanoho.features.InputEvents;
 import ec.brooke.kanoho.features.VelocityCommand;
 import ec.brooke.kanoho.features.props.PropSystem;
 import ec.brooke.kanoho.features.resourcepack.ResourcepackCommand;
@@ -23,9 +24,10 @@ public class Kanoho implements ModInitializer {
     public void onInitialize() {
         resourcepacks.register();
         ephemerality.register();
-        events.setup();
+        events.register();
 
         new PropSystem().register();
+        InputEvents.register();
 
         // Register commands
         new VelocityCommand().register();
