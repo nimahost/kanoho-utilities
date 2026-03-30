@@ -1,9 +1,8 @@
 package ec.brooke.kanoho.features.props;
 
-import com.mojang.serialization.Codec;
 import ec.brooke.kanoho.Kanoho;
+import ec.brooke.kanoho.features.components.ItemComponents;
 import ec.brooke.kanoho.framework.RawInteractCallback;
-import ec.brooke.kanoho.framework.components.ComponentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -39,7 +38,6 @@ public class WrenchHandler {
             ))
     );
 
-    private static final ComponentType<Boolean> WRENCH = new ComponentType<>("wrench", Codec.BOOL);
     private static final SoundEvent CHANGE_SOUND = SoundEvents.COPPER_BULB_TURN_ON;
     private static final double FIND_RADIUS = 0.75;
     private static final double FIND_DISTANCE = 5;
@@ -57,7 +55,7 @@ public class WrenchHandler {
         players.addAll(this.players.keySet());
 
         for (Player player : players) {
-            boolean wrench = player.isRemoved() || WRENCH.from(player.getMainHandItem()).orElse(false);
+            boolean wrench = player.isRemoved() || ItemComponents.WRENCH.from(player.getMainHandItem()).orElse(false);
 
             if (wrench) {
                 WrenchState state = this.players.computeIfAbsent(player, WrenchState::new);

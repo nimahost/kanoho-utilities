@@ -3,7 +3,7 @@ package ec.brooke.kanoho.features;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import ec.brooke.kanoho.Kanoho;
-import ec.brooke.kanoho.framework.components.ComponentType;
+import ec.brooke.kanoho.features.components.EntityComponents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -32,15 +32,13 @@ public record InputEvents(
         ResourceLocation.CODEC.optionalFieldOf("sprint").forGetter(InputEvents::sprint)
     ).apply(instance, InputEvents::new));
 
-    public static final ComponentType<InputEvents> COMPONENT = new ComponentType<>("input", CODEC);
-
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 Entity vehicle = player.getVehicle();
                 if (vehicle != null) {
                     Input input = player.getLastClientInput();
-                    COMPONENT.from(vehicle).ifPresent(component -> component.invoke(vehicle, input));
+                    EntityComponents.INPUT_EVENTS.from(vehicle).ifPresent(component -> component.invoke(vehicle, input));
                 }
             }
         });

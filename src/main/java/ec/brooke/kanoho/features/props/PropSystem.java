@@ -1,7 +1,6 @@
 package ec.brooke.kanoho.features.props;
 
-import com.mojang.serialization.Codec;
-import ec.brooke.kanoho.framework.components.ComponentType;
+import ec.brooke.kanoho.features.components.ItemComponents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -25,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 
 public class PropSystem {
-    public static final ComponentType<Boolean> COMPONENT = new ComponentType<>("prop", Codec.BOOL);
+
     private static final SoundEvent REMOVE_SOUND = SoundEvents.ARMOR_STAND_BREAK;
     private static final SoundEvent PLACE_SOUND = SoundEvents.ARMOR_STAND_PLACE;
     public static final String PROP_TAG = "prop";
@@ -36,7 +35,7 @@ public class PropSystem {
     }
 
     private InteractionResult onUseBlock(Player player, Level level, InteractionHand hand, BlockHitResult hit) {
-        if (!player.mayBuild() || !COMPONENT.from(player.getItemInHand(hand)).orElse(false)) return InteractionResult.PASS;
+        if (!player.mayBuild() || !ItemComponents.PROP.from(player.getItemInHand(hand)).orElse(false)) return InteractionResult.PASS;
 
         if (hit.getType() == BlockHitResult.Type.MISS) return InteractionResult.PASS;
         Vec3 position = hit.getLocation()

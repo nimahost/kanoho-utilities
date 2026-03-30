@@ -1,6 +1,7 @@
 package ec.brooke.kanoho.features.components;
 
 import com.mojang.serialization.Codec;
+import ec.brooke.kanoho.features.InputEvents;
 import ec.brooke.kanoho.framework.components.ComponentType;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public class EntityComponents {
     public static final ComponentType<List<String>> COOLDOWNS = new ComponentType<>("cooldowns", Codec.list(Codec.STRING));
+    public static final ComponentType<InputEvents> INPUT_EVENTS = new ComponentType<>("input", InputEvents.CODEC);
     public static final ComponentType<String> RESOURCEPACK = new ComponentType<>("resourcepack", Codec.STRING);
     public static final ComponentType<ItemStack> USED = new ComponentType<>("used", ItemStack.CODEC);
 
