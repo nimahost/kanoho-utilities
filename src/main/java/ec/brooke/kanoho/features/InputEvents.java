@@ -11,6 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Input;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 public record InputEvents(
@@ -36,21 +38,21 @@ public record InputEvents(
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 Entity vehicle = player.getVehicle();
-                if (vehicle != null) {
-                    Input input = player.getLastClientInput();
-                    EntityComponents.INPUT_EVENTS.from(vehicle).ifPresent(component -> component.invoke(vehicle, input));
-                }
+                if (vehicle != null) EntityComponents.INPUT_EVENTS.from(vehicle).ifPresent(component -> component.invoke(vehicle, player));
             }
         });
     }
 
-    public void invoke(Entity entity, Input input) {
-        if (input.forward()) forward.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
-        if (input.backward()) backward.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
-        if (input.left()) left.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
-        if (input.right()) right.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
-        if (input.jump()) jump.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
-        if (input.shift()) sneak.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
-        if (input.sprint()) sprint.ifPresent(resource -> Kanoho.events.invoke(entity, resource));
+    public void invoke(Entity entity, ServerPlayer player) {
+        Map<String, String> args = Collections.singletonMap("player", player.getUUID().toString());
+        Input input = player.getLastClientInput();
+
+        if (input.forward()) forward.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
+        if (input.backward()) backward.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
+        if (input.left()) left.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
+        if (input.right()) right.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
+        if (input.jump()) jump.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
+        if (input.shift()) sneak.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
+        if (input.sprint()) sprint.ifPresent(resource -> Kanoho.events.invoke(entity, resource, args));
     }
 }
