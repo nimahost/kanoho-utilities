@@ -51,7 +51,7 @@ public class PropSystem {
         entity.addTag(PROP_TAG);
         entity.setPos(position);
 
-        player.swing(hand);
+        player.swing(hand, true);
         level.playSound(null, position.x, position.y, position.z, PLACE_SOUND, SoundSource.BLOCKS,1f, 1f);
 
         level.addFreshEntity(entity);

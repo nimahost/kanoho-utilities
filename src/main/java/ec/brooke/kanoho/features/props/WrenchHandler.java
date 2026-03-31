@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 
 public class WrenchHandler {
     private static final List<GizmoMode> MODES = List.of(
@@ -45,6 +46,7 @@ public class WrenchHandler {
     private static final double FIND_DISTANCE = 5;
     private static final int COOLDOWN = 3;
 
+    private final Queue<InteractionQueueEntry> interactions = new java.util.LinkedList<>();
     private final HashMap<Player, WrenchState> players = new HashMap<>();
 
     public void register() {
@@ -65,16 +67,21 @@ public class WrenchHandler {
                 state.decrementCooldown();
             } else removeState(player);
         }
+
+        while (!interactions.isEmpty()) {
+            InteractionQueueEntry entry = interactions.poll();
+            WrenchState state = this.players.get(entry.player);
+            if (state == null || state.cooldown()) continue;
+
+            switch (entry.action) {
+                case ATTACK -> attack(state, entry.level);
+                case USE -> use(state, entry.level);
+            }
+        }
     }
 
     private void onInteract(Player player, Level level, RawInteractCallback.Action action) {
-        WrenchState state = this.players.get(player);
-        if (state == null || state.cooldown()) return;
-
-        switch (action) {
-            case ATTACK -> attack(state, level);
-            case USE -> use(state, level);
-        }
+        interactions.add(new InteractionQueueEntry(player, level, action));
     }
 
     private void attack(WrenchState state, Level level) {
@@ -239,4 +246,6 @@ public class WrenchHandler {
             WrenchGizmo create(WrenchState state);
         }
     }
+
+    private record InteractionQueueEntry(Player player, Level level, RawInteractCallback.Action action) {}
 }
