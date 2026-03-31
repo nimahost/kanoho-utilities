@@ -6,7 +6,6 @@ import net.minecraft.commands.execution.ExecutionContext;
 import net.minecraft.commands.functions.CommandFunction;
 import net.minecraft.commands.functions.InstantiatedFunction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerFunctionManager;
@@ -16,7 +15,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class FunctionEvents {
     private final Queue<QueuedEventInvocation> queue = new LinkedList<>();
